@@ -23,6 +23,7 @@ public class BackendManager : MonoBehaviour {
         }
         if (login_button != null) {
             login_button.onClick.AddListener(Login);
+            login_button.onClick.AddListener(DoLogin);
         }
         if (signin_button != null) {
             signin_button.onClick.AddListener(Signin);
@@ -47,16 +48,19 @@ public class BackendManager : MonoBehaviour {
     async void Login() {
         await Task.Run(() => {
             BackendLogin.Instance.CustomLogin(id_inputfield.text, pw_inputfield.text); // [추가] 뒤끝 로그인
-            id_inputfield.text = "";
-            pw_inputfield.text = "";
         });
+    }
+    void DoLogin() {
+        id_inputfield.text = "";
+        pw_inputfield.text = "";
+        SceneManager.LoadScene("SelectScene");
     }
 
     async void Signin() {
         await Task.Run(() => {
             BackendLogin.Instance.CustomSignUp(id_inputfield.text, pw_inputfield.text); // [추가] 뒤끝 회원가입 함수
-            id_inputfield.text = "";
-            pw_inputfield.text = "";
+            // id_inputfield.text = "";
+            // pw_inputfield.text = "";
         });
     }
 }
