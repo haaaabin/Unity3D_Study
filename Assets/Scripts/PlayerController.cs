@@ -4,30 +4,54 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 5.0f;
-    public float jumpForce = 10.0f;
-    public Rigidbody rb;
-    float h, v;
-    
-    // Start is called before the first frame update
+    public bool enableMobile = false;
+
+    [SerializeField]
+    private float smoothRotationTime;//target ������ ȸ���ϴµ� �ɸ��� �ð�
+    [SerializeField]
+    private float smoothMoveTime;//target �ӵ��� �ٲ�µ� �ɸ��� �ð�
+    [SerializeField]
+    private float moveSpeed;
+    private float rotationVelocity;
+    private float speedVelocity;
+    private float currentSpeed;
+    private float targetSpeed;
+
+    Transform cameraTransform;
+    public VariableJoystick joystick;
+
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        cameraTransform = Camera.main.transform;    
     }
 
-    // Update is called once per frame
     void Update()
     {
-        PlayerMove();
-    }
+        Vector2 input = Vector2.zero;
 
-    void PlayerMove() 
-    {
-        // Point 1.
-        h = Input.GetAxis("Horizontal");        // 가로축
-        v = Input.GetAxis("Vertical");          // 세로축
+        if (enableMobile)
+        {
+            input = new Vector2(joystick.input.x, joystick.input.y);
+        }
+        else
+        {
+            input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        }
 
-        // Point 2.
-        transform.position += new Vector3(h, 0, v) * speed * Time.deltaTime;
+
+        Vector2 inputDir = input.normalized;
+
+
+        if (inputDir != Vector2.zero)//�������� ������ �� �ٽ� ó�� ������ ���ư��°� ��������
+        {
+            //�÷��̾��� ������ ���� ī�޶��� ������ �����ش�.
+            float rotation = Mathf.Atan2(inputDir.x, inputDir.y) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
+            transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, rotation, ref rotationVelocity, smoothRotationTime);
+        }
+
+        targetSpeed = moveSpeed * inputDir.magnitude;
+        currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref speedVelocity, smoothMoveTime);
+
+        transform.Translate(transform.forward * currentSpeed * Time.deltaTime, Space.World);
     }
 }
