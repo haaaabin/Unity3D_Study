@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/SelectScene.unity
     guid: c499643a4a7e4174bbc6d37899040f9d
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Scenes/IngameSceneCHB.unity
     guid: c850ee8c3b14cc8459e7e186857cf567
   m_configObjects:
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000,
