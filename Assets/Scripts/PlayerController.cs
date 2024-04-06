@@ -7,9 +7,9 @@ public class PlayerController : MonoBehaviour
     public bool enableMobile = false;
 
     [SerializeField]
-    private float smoothRotationTime;//target °¢µµ·Î È¸ÀüÇÏ´Âµ¥ °É¸®´Â ½Ã°£
+    private float smoothRotationTime;//target ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½Ï´Âµï¿½ ï¿½É¸ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
     [SerializeField]
-    private float smoothMoveTime;//target ¼Óµµ·Î ¹Ù²î´Âµ¥ °É¸®´Â ½Ã°£
+    private float smoothMoveTime;//target ï¿½Óµï¿½ï¿½ï¿½ ï¿½Ù²ï¿½Âµï¿½ ï¿½É¸ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
     [SerializeField]
     private float moveSpeed;
     private float rotationVelocity;
@@ -42,9 +42,9 @@ public class PlayerController : MonoBehaviour
         Vector2 inputDir = input.normalized;
 
 
-        if (inputDir != Vector2.zero)//¿òÁ÷ÀÓÀ» ¸ØÃèÀ» ¶§ ´Ù½Ã Ã³À½ °¢µµ·Î µ¹¾Æ°¡´Â°É ¸·±âÀ§ÇÔ
+        if (inputDir != Vector2.zero)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ù½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½ï¿½Â°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         {
-            //ÇÃ·¹ÀÌ¾îÀÇ °¢µµ¿¡ ÇöÀç Ä«¸Þ¶óÀÇ °¢µµ¸¦ ´õÇØÁØ´Ù.
+            //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½Þ¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø´ï¿½.
             float rotation = Mathf.Atan2(inputDir.x, inputDir.y) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
             transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, rotation, ref rotationVelocity, smoothRotationTime);
         }
