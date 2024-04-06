@@ -9,11 +9,10 @@ public class MainCamera : MonoBehaviour
 
     public Transform target;
 
-    private float rotSensitive = 3f;//카메라 회전 감도
-    private float dis = 2f;//카메라와 플레이어사이의 거리
-    private float RotationMin = -10f;//카메라 회전각도 최소
-    private float RotationMax = 80f;//카메라 회전각도 최대
-    private float smoothTime = 0.12f;//카메라가 회전하는데 걸리는 시간
+    public float rotSensitive = 10f;//카메라 회전 감도
+    public float RotationMin = -10f;//카메라 회전각도 최소
+    public float RotationMax = 80f;//카메라 회전각도 최대
+    public float smoothTime = 0.12f;//카메라가 회전하는데 걸리는 시간
  
     private Vector3 targetRotation;
     private Vector3 currentVel;
@@ -22,12 +21,15 @@ public class MainCamera : MonoBehaviour
 
     public FixedTouchField touchField;
 
+    public float offsetX;
+    public float offsetY;
+    public float offsetZ;
     void LateUpdate()
     {
         if (enableMobile)
         {
             Yaxis = Yaxis + touchField.TouchDist.x * rotSensitive;
-            Xaxis = Xaxis + touchField.TouchDist.y * rotSensitive;
+            Xaxis = Xaxis - touchField.TouchDist.y * rotSensitive;
         }
         else
         {
@@ -41,10 +43,14 @@ public class MainCamera : MonoBehaviour
         //X축회전이 한계치를 넘지않게 제한해준다.
 
         targetRotation = Vector3.SmoothDamp(targetRotation, new Vector3(Xaxis, Yaxis), ref currentVel, smoothTime);
-        this.transform.eulerAngles = targetRotation;
+        transform.eulerAngles = targetRotation;
         //SmoothDamp를 통해 부드러운 카메라 회전
 
-        transform.position = target.position - transform.forward * dis;
+        Vector3 FixPedPos = new Vector3(target.transform.position.x + offsetX,
+                                        target.transform.position.y + offsetY,
+                                        target.transform.position.z + offsetZ);
+        transform.position = FixPedPos;
+        //transform.position = target.position - transform.forward * dis;
         //카메라의 위치는 플레이어보다 설정한 값만큼 떨어져있게 계속 변경된다.
     }
 }
