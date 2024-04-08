@@ -1,56 +1,73 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 using UnityEngine;
 
 public class MainCamera : MonoBehaviour
 {
-    public float Yaxis;
-    public float Xaxis;
-
     public Transform target;
+    public float followspeed = 15f;
+    public float sensitive = 7f;  //ê°ë„
+    public float clampAngle = 50f;  
 
-    public float rotSensitive = 10f;//Ä«¸Ş¶ó È¸Àü °¨µµ
-    public float RotationMin = -10f;//Ä«¸Ş¶ó È¸Àü°¢µµ ÃÖ¼Ò
-    public float RotationMax = 80f;//Ä«¸Ş¶ó È¸Àü°¢µµ ÃÖ´ë
-    public float smoothTime = 0.12f;//Ä«¸Ş¶ó°¡ È¸ÀüÇÏ´Âµ¥ °É¸®´Â ½Ã°£
- 
-    private Vector3 targetRotation;
-    private Vector3 currentVel;
+    private float rotX;
+    private float rotY;
 
-    public bool enableMobile = false;
+    public Transform realCamera;
+    public Vector3 dirNormalized;   //ë°©í–¥
+    public Vector3 finalDir;    //ìµœì¢… ë°©í–¥
+    public float minDistance;   //ìµœì†Œ ê±°ë¦¬
+    public float maxDistance;   //ìµœëŒ€ ê±°ë¦¬
+    public float finalDistance; //ìµœì¢… ê±°ë¦¬
+    public float smoothness = 10f;
 
     public FixedTouchField touchField;
+    public bool enableMobile = false;
 
-    public float offsetX;
-    public float offsetY;
-    public float offsetZ;
-    void LateUpdate()
+    void Start()
+    {
+        rotX = transform.localRotation.eulerAngles.x;
+        rotY = transform.localRotation.eulerAngles.y;
+
+        dirNormalized = realCamera.localPosition.normalized;
+        finalDistance = realCamera.localPosition.magnitude;
+    }
+
+    void Update()
     {
         if (enableMobile)
         {
-            Yaxis = Yaxis + touchField.TouchDist.x * rotSensitive;
-            Xaxis = Xaxis - touchField.TouchDist.y * rotSensitive;
+            rotY += touchField.TouchDist.x * sensitive * Time.deltaTime;
+            rotX -= touchField.TouchDist.y * sensitive * Time.deltaTime;
         }
         else
         {
-            Yaxis = Yaxis + Input.GetAxis("Mouse X") * rotSensitive;
-            Xaxis = Xaxis - Input.GetAxis("Mouse Y") * rotSensitive;
+            rotY += Input.GetAxis("Mouse X") * sensitive * Time.deltaTime;
+            rotX -= Input.GetAxis("Mouse Y") * sensitive * Time.deltaTime;
         }
 
-        //Xaxis´Â ¸¶¿ì½º¸¦ ¾Æ·¡·Î ÇßÀ»¶§(À½¼ö°ªÀÌ ÀÔ·Â ¹Ş¾ÆÁú¶§) °ªÀÌ ´õÇØÁ®¾ß Ä«¸Ş¶ó°¡ ¾Æ·¡·Î È¸ÀüÇÑ´Ù 
+        rotX = Mathf.Clamp(rotX, -clampAngle, clampAngle);
+        Quaternion rot = Quaternion.Euler(rotX, rotY, 0);
+        transform.rotation = rot;
+    }
 
-        Xaxis = Mathf.Clamp(Xaxis, RotationMin, RotationMax);
-        //XÃàÈ¸ÀüÀÌ ÇÑ°èÄ¡¸¦ ³ÑÁö¾Ê°Ô Á¦ÇÑÇØÁØ´Ù.
+    void LateUpdate()
+    {
+        transform.position = Vector3.Lerp(transform.position, target.position, followspeed * Time.deltaTime);
 
-        targetRotation = Vector3.SmoothDamp(targetRotation, new Vector3(Xaxis, Yaxis), ref currentVel, smoothTime);
-        transform.eulerAngles = targetRotation;
-        //SmoothDamp¸¦ ÅëÇØ ºÎµå·¯¿î Ä«¸Ş¶ó È¸Àü
+        finalDir = transform.TransformPoint(dirNormalized * maxDistance);
 
-        Vector3 FixPedPos = new Vector3(target.transform.position.x + offsetX,
-                                        target.transform.position.y + offsetY,
-                                        target.transform.position.z + offsetZ);
-        transform.position = FixPedPos;
-        //transform.position = target.position - transform.forward * dis;
-        //Ä«¸Ş¶óÀÇ À§Ä¡´Â ÇÃ·¹ÀÌ¾îº¸´Ù ¼³Á¤ÇÑ °ª¸¸Å­ ¶³¾îÁ®ÀÖ°Ô °è¼Ó º¯°æµÈ´Ù.
+        RaycastHit hit;
+        
+        if(Physics.Linecast(transform.position, finalDir, out hit))
+        {
+            finalDistance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
+        }
+        else
+        {
+            finalDistance = maxDistance;
+        }
+
+        realCamera.localPosition = Vector3.Lerp(realCamera.localPosition, dirNormalized * finalDistance, Time.deltaTime * smoothness);
     }
 }

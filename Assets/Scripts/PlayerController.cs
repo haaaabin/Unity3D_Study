@@ -7,9 +7,9 @@ public class PlayerController : MonoBehaviour
     public bool enableMobile = false;
 
     [SerializeField]
-    private float smoothRotationTime;//target ������ ȸ���ϴµ� �ɸ��� �ð�
+    private float smoothRotationTime;
     [SerializeField]
-    private float smoothMoveTime;//target �ӵ��� �ٲ�µ� �ɸ��� �ð�
+    private float smoothMoveTime;
     [SerializeField]
     private float moveSpeed;
     private float rotationVelocity;
@@ -19,32 +19,35 @@ public class PlayerController : MonoBehaviour
 
     Transform cameraTransform;
     public VariableJoystick joystick;
+    Animator anim;
 
-    void Start()
+    void Awake()
     {
-        cameraTransform = Camera.main.transform;    
+        anim = GetComponent<Animator>();
+        cameraTransform = Camera.main.transform;
     }
 
     void Update()
     {
-        Vector2 input = Vector2.zero;
+
+        Vector3 input = Vector3.zero;
 
         if (enableMobile)
         {
-            input = new Vector2(joystick.input.x, joystick.input.y);
+            input = new Vector3(joystick.input.x, joystick.input.y,0);
         }
         else
         {
-            input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            input = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0);
         }
 
+        anim.SetBool("IsWalk", input != Vector3.zero);
 
         Vector2 inputDir = input.normalized;
 
-
-        if (inputDir != Vector2.zero)//�������� ������ �� �ٽ� ó�� ������ ���ư��°� ��������
+        //캐릭터 회전
+        if (inputDir != Vector2.zero)
         {
-            //�÷��̾��� ������ ���� ī�޶��� ������ �����ش�.
             float rotation = Mathf.Atan2(inputDir.x, inputDir.y) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
             transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, rotation, ref rotationVelocity, smoothRotationTime);
         }
@@ -53,5 +56,6 @@ public class PlayerController : MonoBehaviour
         currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref speedVelocity, smoothMoveTime);
 
         transform.Translate(transform.forward * currentSpeed * Time.deltaTime, Space.World);
+        
     }
 }
