@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class IngameManager : MonoBehaviour
 {
     public GameObject boy, girl;
+    public Transform followcam_boy, followcam_girl;
     public MainCamera mainCamera;
     public Button btn_back;
 
@@ -13,12 +14,12 @@ public class IngameManager : MonoBehaviour
         if (PlayerInfo.Instance.GetPlayerType() == PlayerType.Boy)
         {
             boy.SetActive(true);
-            mainCamera.target = boy.transform;
+            mainCamera.target = followcam_boy;
         }
         else if (PlayerInfo.Instance.GetPlayerType() == PlayerType.Girl)
         {
             girl.SetActive(true);
-            mainCamera.target = girl.transform;
+            mainCamera.target = followcam_girl;
         }
         btn_back.onClick.AddListener(LoadSelectScene);
     }
