@@ -1,16 +1,16 @@
 using UnityEngine;
-using System.Threading.Tasks; // [변경] async 기능을 이용하기 위해서는 해당 namepsace가 필요합니다.  
-
-// 뒤끝 SDK namespace 추가
-using BackEnd;
+using System.Threading.Tasks; // async  
+using BackEnd; // 뒤끝 SDK namespace
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class BackendManager : MonoBehaviour {
 
-    public TMP_InputField id_inputfield, pw_inputfield;
-    public Button login_button, load_signin_button, signin_button, load_login_button;
+    public TMP_InputField ID, PW;
+    public Button btn_login, btn_load_signin, btn_signin, btn_load_login;
+    bool isLogin = false;
+    bool isSignUp = false;
 
     void Start() {
         var bro = Backend.Initialize(true); // 뒤끝 초기화
@@ -21,19 +21,33 @@ public class BackendManager : MonoBehaviour {
         } else {
             Debug.LogError("초기화 실패 : " + bro); // 실패일 경우 statusCode 400대 에러 발생
         }
-        if (login_button != null) {
-            login_button.onClick.AddListener(Login);
-            login_button.onClick.AddListener(DoLogin);
+        if (btn_login != null) {
+            btn_login.onClick.AddListener(DoLogin);
+            btn_login.onClick.AddListener(CleanIDPW);
         }
-        if (signin_button != null) {
-            signin_button.onClick.AddListener(Signin);
+        if (btn_signin != null) {
+            btn_signin.onClick.AddListener(DoSignUp);
+            btn_signin.onClick.AddListener(CleanIDPW);
         }
-        if (load_login_button != null) {
-            load_login_button.onClick.AddListener(LoadLoginScene);
+        if (btn_load_login != null) {
+            btn_load_login.onClick.AddListener(LoadLoginScene);
         }
-        if (load_signin_button != null) {
-            load_signin_button.onClick.AddListener(LoadSigninScene);
+        if (btn_load_signin != null) {
+            btn_load_signin.onClick.AddListener(LoadSigninScene);
         }
+    }
+    void Update() {
+        if (isLogin) {
+            isLogin = false;
+            LoadSelectScene();
+        }
+        if (isSignUp) {
+            isSignUp = false;
+            LoadLoginScene();
+        }
+    }
+    void LoadSelectScene() {
+        SceneManager.LoadScene("SelectScene");
     }
     void LoadLoginScene() {
         SceneManager.LoadScene("LoginScene");
@@ -41,26 +55,27 @@ public class BackendManager : MonoBehaviour {
     void LoadSigninScene() {
         SceneManager.LoadScene("SigninScene");
     }
+    void CleanIDPW() {
+        ID.text = "";
+        PW.text = "";
+    }
 
-    // =======================================================
-    // [추가] 동기 함수를 비동기에서 호출하게 해주는 함수(유니티 UI 접근 불가)
-    // =======================================================
-    async void Login() {
+    // 동기 함수를 비동기에서 호출하게 해주는 함수(유니티 UI 접근 불가)
+    async void DoLogin() {
         await Task.Run(() => {
-            BackendLogin.Instance.CustomLogin(id_inputfield.text, pw_inputfield.text); // [추가] 뒤끝 로그인
+            isLogin = BackendLogin.Instance.CustomLogin(ID.text, PW.text);
         });
     }
-    void DoLogin() {
-        id_inputfield.text = "";
-        pw_inputfield.text = "";
-        SceneManager.LoadScene("SelectScene");
+
+    async void DoSignUp() {
+        await Task.Run(() => {
+            isSignUp = BackendLogin.Instance.CustomSignUp(ID.text, PW.text);
+        });
     }
 
-    async void Signin() {
+    async void DoUpdateNickname() {
         await Task.Run(() => {
-            BackendLogin.Instance.CustomSignUp(id_inputfield.text, pw_inputfield.text); // [추가] 뒤끝 회원가입 함수
-            // id_inputfield.text = "";
-            // pw_inputfield.text = "";
+            BackendLogin.Instance.UpdateNickname("원하는 이름");
         });
     }
 }

@@ -7,15 +7,17 @@ public class CharacterSelect : MonoBehaviour
     public Button char1, char2;
     void Start()
     {
-        char1.onClick.AddListener(SelectChar1);
-        char2.onClick.AddListener(SelectChar2);
+        char1.onClick.AddListener(SelectBoyCharacter);
+        char2.onClick.AddListener(SelectGirlCharacter);
     }
-    void SelectChar1() {
+    void SelectBoyCharacter() {
         Debug.Log("캐릭터 1을 선택합니다.");
-        SceneManager.LoadScene("SampleScene");
+        PlayerInfo.Instance.SetPlayerType(PlayerType.Boy);
+        SceneManager.LoadScene("IngameSceneJJM");
     }
-    void SelectChar2() {
+    void SelectGirlCharacter() {
         Debug.Log("캐릭터 2을 선택합니다.");
-        SceneManager.LoadScene("SampleScene");
+        PlayerInfo.Instance.SetPlayerType(PlayerType.Girl);
+        SceneManager.LoadScene("IngameSceneJJM");
     }
 }

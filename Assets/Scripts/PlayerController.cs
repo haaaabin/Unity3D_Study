@@ -58,4 +58,9 @@ public class PlayerController : MonoBehaviour
         transform.Translate(transform.forward * currentSpeed * Time.deltaTime, Space.World);
         
     }
+    void OnTriggerStay(Collider other) {
+        if (other.gameObject.tag == "NoticeBoard") {
+            Debug.Log("NoticeBoard");
+        }
+    }
 }
