@@ -11,12 +11,12 @@ public class IngameManager : MonoBehaviour
 
     void Start()
     {
-        if (PlayerInfo.Instance.GetPlayerType() == PlayerType.Boy)
+        if (PlayerInfo.Instance.PlayerType == PlayerType.Boy)
         {
             boy.SetActive(true);
             mainCamera.target = followcam_boy;
         }
-        else if (PlayerInfo.Instance.GetPlayerType() == PlayerType.Girl)
+        else if (PlayerInfo.Instance.PlayerType == PlayerType.Girl)
         {
             girl.SetActive(true);
             mainCamera.target = followcam_girl;

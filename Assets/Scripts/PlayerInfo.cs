@@ -10,12 +10,11 @@ public sealed class PlayerInfo : SingletonBase<PlayerInfo>
 {
     [SerializeField]
     private PlayerType playerType = PlayerType.Boy;
-
-    public void SetPlayerType(PlayerType type) {
-        playerType = type;
-    }
-    public PlayerType GetPlayerType() {
-        return playerType;
+    public PlayerType PlayerType
+    {
+        get { return playerType; }
+        set { playerType = value; }
     }
 
+    private string nickname = "Unknown";
 }

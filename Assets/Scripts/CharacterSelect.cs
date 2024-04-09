@@ -12,12 +12,13 @@ public class CharacterSelect : MonoBehaviour
     }
     void SelectBoyCharacter() {
         Debug.Log("캐릭터 1을 선택합니다.");
-        PlayerInfo.Instance.SetPlayerType(PlayerType.Boy);
+        PlayerInfo.Instance.PlayerType = PlayerType.Boy;
         SceneManager.LoadScene("IngameSceneJJM");
     }
     void SelectGirlCharacter() {
         Debug.Log("캐릭터 2을 선택합니다.");
-        PlayerInfo.Instance.SetPlayerType(PlayerType.Girl);
+
+        PlayerInfo.Instance.PlayerType = PlayerType.Girl;
         SceneManager.LoadScene("IngameSceneJJM");
     }
 }
