@@ -1,24 +1,35 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class CharacterSelect : MonoBehaviour
 {
-    public Button char1, char2;
+    public Button btn_character_boy, btn_character_girl, btn_gamestart;
+    public GameObject popup_gamestart;
+    public TMP_InputField input_nickname;
     void Start()
     {
-        char1.onClick.AddListener(SelectBoyCharacter);
-        char2.onClick.AddListener(SelectGirlCharacter);
+        btn_character_boy.onClick.AddListener(SelectBoyCharacter);
+        btn_character_girl.onClick.AddListener(SelectGirlCharacter);
+        btn_gamestart.onClick.AddListener(ClickGameStart);
     }
     void SelectBoyCharacter() {
-        Debug.Log("캐릭터 1을 선택합니다.");
         PlayerInfo.Instance.PlayerType = PlayerType.Boy;
-        SceneManager.LoadScene("IngameSceneJJM");
+        popup_gamestart.SetActive(true);
     }
     void SelectGirlCharacter() {
-        Debug.Log("캐릭터 2을 선택합니다.");
-
         PlayerInfo.Instance.PlayerType = PlayerType.Girl;
+        popup_gamestart.SetActive(true);
+    }
+    void ClickGameStart()
+    {
+        if (string.IsNullOrEmpty(input_nickname.text))
+        {
+            Debug.Log("닉네임을 입력해주세요.");
+            return;
+        }
+        PlayerInfo.Instance.Nickname = input_nickname.text;
         SceneManager.LoadScene("IngameSceneJJM");
     }
 }

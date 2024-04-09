@@ -1941,6 +1941,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 329569184286662638, guid: 907fd825e3988774caab4234b943bf44,
+        type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 329569184286662638, guid: 907fd825e3988774caab4234b943bf44,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 329569184286662638, guid: 907fd825e3988774caab4234b943bf44,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 3.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3988120759609526951, guid: 907fd825e3988774caab4234b943bf44,
         type: 3}
       propertyPath: joystick
@@ -1949,17 +1964,12 @@ PrefabInstance:
     - target: {fileID: 7447163605589988728, guid: 907fd825e3988774caab4234b943bf44,
         type: 3}
       propertyPath: m_Name
-      value: TT_demo_male_B
+      value: Player_Boy
       objectReference: {fileID: 0}
     - target: {fileID: 7447163605589988728, guid: 907fd825e3988774caab4234b943bf44,
         type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7447163605589988728, guid: 907fd825e3988774caab4234b943bf44,
-        type: 3}
-      propertyPath: m_TagString
-      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 7447163605590411544, guid: 907fd825e3988774caab4234b943bf44,
         type: 3}
@@ -2014,7 +2024,15 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1404129565645426955, guid: 907fd825e3988774caab4234b943bf44,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1371925201}
+    - targetCorrespondingSourceObject: {fileID: 1404129565645426955, guid: 907fd825e3988774caab4234b943bf44,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 907fd825e3988774caab4234b943bf44, type: 3}
 --- !u!1 &298498330 stripped
 GameObject:
@@ -2025,6 +2043,12 @@ GameObject:
 --- !u!4 &298498331 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9118718638131484974, guid: 907fd825e3988774caab4234b943bf44,
+    type: 3}
+  m_PrefabInstance: {fileID: 298498329}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &298498332 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1404129565645426955, guid: 907fd825e3988774caab4234b943bf44,
     type: 3}
   m_PrefabInstance: {fileID: 298498329}
   m_PrefabAsset: {fileID: 0}
@@ -9554,22 +9578,26 @@ PrefabInstance:
     - target: {fileID: 6252356961377389083, guid: 2db03e7c8a8135146b280e5da7e0289c,
         type: 3}
       propertyPath: m_Name
-      value: TT_demo_female
+      value: Player_Girl
       objectReference: {fileID: 0}
-    - target: {fileID: 6252356961377389083, guid: 2db03e7c8a8135146b280e5da7e0289c,
+    - target: {fileID: 9114832375757609296, guid: 2db03e7c8a8135146b280e5da7e0289c,
         type: 3}
-      propertyPath: m_IsActive
-      value: 0
+      propertyPath: m_fontSize
+      value: 3.5
       objectReference: {fileID: 0}
-    - target: {fileID: 6252356961377389083, guid: 2db03e7c8a8135146b280e5da7e0289c,
+    - target: {fileID: 9114832375757609296, guid: 2db03e7c8a8135146b280e5da7e0289c,
         type: 3}
-      propertyPath: m_TagString
-      value: Player
+      propertyPath: m_fontSizeBase
+      value: 3.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6880041098091337004, guid: 2db03e7c8a8135146b280e5da7e0289c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1166365823}
   m_SourcePrefab: {fileID: 100100000, guid: 2db03e7c8a8135146b280e5da7e0289c, type: 3}
 --- !u!1 &1166365819 stripped
 GameObject:
@@ -9583,6 +9611,37 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1166365818}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1166365821 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9114832375757609296, guid: 2db03e7c8a8135146b280e5da7e0289c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1166365818}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1166365822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1166365822 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6880041098091337004, guid: 2db03e7c8a8135146b280e5da7e0289c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1166365818}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1166365823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1166365822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bffb82c861d38854e909c25ee22ad047, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 1214295852}
 --- !u!1001 &1185256799
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11127,6 +11186,31 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1322758910}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1371925200 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 329569184286662638, guid: 907fd825e3988774caab4234b943bf44,
+    type: 3}
+  m_PrefabInstance: {fileID: 298498329}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 298498332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1371925201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 298498332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bffb82c861d38854e909c25ee22ad047, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 1214295852}
 --- !u!1001 &1396589584
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15741,6 +15825,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1725544494}
+    - targetCorrespondingSourceObject: {fileID: 6011741685567568286, guid: 5c45d9b84df420b49b08e2b5e95e0bf6,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 404161501888027951}
   m_SourcePrefab: {fileID: 100100000, guid: 5c45d9b84df420b49b08e2b5e95e0bf6, type: 3}
 --- !u!114 &404161501888027950 stripped
 MonoBehaviour:
@@ -15754,6 +15842,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &404161501888027951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453826159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bffb82c861d38854e909c25ee22ad047, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 1214295852}
 --- !u!1001 &4886383818244894054
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15789,9 +15890,19 @@ PrefabInstance:
       objectReference: {fileID: 1055561758}
     - target: {fileID: 3392050731285044922, guid: e907e38ccad639947bc0d8db0a114021,
         type: 3}
+      propertyPath: nickname_boy
+      value: 
+      objectReference: {fileID: 1371925200}
+    - target: {fileID: 3392050731285044922, guid: e907e38ccad639947bc0d8db0a114021,
+        type: 3}
       propertyPath: followcam_boy
       value: 
       objectReference: {fileID: 298498331}
+    - target: {fileID: 3392050731285044922, guid: e907e38ccad639947bc0d8db0a114021,
+        type: 3}
+      propertyPath: nickname_girl
+      value: 
+      objectReference: {fileID: 1166365821}
     - target: {fileID: 3392050731285044922, guid: e907e38ccad639947bc0d8db0a114021,
         type: 3}
       propertyPath: followcam_girl
