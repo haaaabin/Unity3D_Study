@@ -16,6 +16,7 @@ public sealed class PlayerInfo : SingletonBase<PlayerInfo>
         set { playerType = value; }
     }
 
+    [SerializeField]
     private string nickname = "Unknown";
     public string Nickname
     {

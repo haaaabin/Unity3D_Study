@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using BackEnd;
 
 public class CharacterSelect : MonoBehaviour
 {
@@ -30,6 +31,10 @@ public class CharacterSelect : MonoBehaviour
             return;
         }
         PlayerInfo.Instance.Nickname = input_nickname.text;
-        SceneManager.LoadScene("IngameSceneJJM");
+        bool isSuccess = BackendLogin.Instance.UpdateNickname(PlayerInfo.Instance.Nickname);
+        if (isSuccess)
+        {
+            SceneManager.LoadScene("IngameSceneJJM");
+        }
     }
 }
