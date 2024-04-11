@@ -34,7 +34,7 @@ public class CharacterSelect : MonoBehaviour
         bool isSuccess = BackendLogin.Instance.UpdateNickname(PlayerInfo.Instance.Nickname);
         if (isSuccess)
         {
-            SceneManager.LoadScene("IngameSceneJJM");
+            SceneManager.LoadScene("3. InGameJJM");
         }
     }
 }

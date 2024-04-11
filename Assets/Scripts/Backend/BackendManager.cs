@@ -47,13 +47,13 @@ public class BackendManager : MonoBehaviour {
         }
     }
     void LoadSelectScene() {
-        SceneManager.LoadScene("SelectScene");
+        SceneManager.LoadScene("2. Select");
     }
     void LoadLoginScene() {
-        SceneManager.LoadScene("LoginScene");
+        SceneManager.LoadScene("0. Login");
     }
     void LoadSigninScene() {
-        SceneManager.LoadScene("SigninScene");
+        SceneManager.LoadScene("1. Signin");
     }
     void CleanIDPW() {
         ID.text = "";
