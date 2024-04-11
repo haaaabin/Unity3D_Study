@@ -1,18 +1,17 @@
+using TMPro;
 using UnityEngine;
 
-public class NoticeBoardController : MonoBehaviour
+public class NoticeBoard : MonoBehaviour
 {
-    public GameObject btn_noticeboard;
-
     void OnTriggerEnter(Collider other) {
         if (other.gameObject.tag == "Player") {
-            btn_noticeboard.SetActive(true);
+            InGameUI.Instance().ToggleNoticeBoardButton();
         }
     }
 
     void OnTriggerExit(Collider other) {
         if (other.gameObject.tag == "Player") {
-            btn_noticeboard.SetActive(false);
+            InGameUI.Instance().ToggleNoticeBoardButton();
         }
     }
 }
