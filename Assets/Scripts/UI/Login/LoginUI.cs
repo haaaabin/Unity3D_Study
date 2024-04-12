@@ -41,7 +41,7 @@ public class LoginUI : MonoBehaviour
     }
     public void ClickLogin()
     {
-        bool isSuccess = BackendManager.Instance().CustomLogin(inputs[ID_INDEX].text, inputs[PW_INDEX].text);
+        bool isSuccess = BackendServerManager.Instance().CustomLogin(inputs[ID_INDEX].text, inputs[PW_INDEX].text);
         if (isSuccess)
         {
             SceneManager.LoadScene("2. Select");
@@ -53,7 +53,7 @@ public class LoginUI : MonoBehaviour
     }
     public void ClickSignUp()
     {
-        bool isSuccess = BackendManager.Instance().CustomSignUp(inputs[ID_INDEX].text, inputs[PW_INDEX].text);
+        bool isSuccess = BackendServerManager.Instance().CustomSignUp(inputs[ID_INDEX].text, inputs[PW_INDEX].text);
         if (isSuccess)
         {
             ShowPopUp("회원가입 성공");

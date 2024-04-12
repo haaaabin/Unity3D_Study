@@ -7,8 +7,8 @@ using BackEnd;
  * 커스텀 로그인/회원가입
  * 닉네임 변경
  */
-public class BackendManager : MonoBehaviour {
-    private static BackendManager instance = null;
+public class BackendServerManager : MonoBehaviour {
+    private static BackendServerManager instance = null;
 
     void Awake()
     {
@@ -21,7 +21,7 @@ public class BackendManager : MonoBehaviour {
         DontDestroyOnLoad(this.gameObject);
     }
 
-    public static BackendManager Instance()
+    public static BackendServerManager Instance()
     {
         if (instance == null)
         {
@@ -43,6 +43,11 @@ public class BackendManager : MonoBehaviour {
         {
             Debug.LogError("초기화 실패 : " + bro);
         }
+    }
+    void Update()
+    {
+        //비동기함수 풀링
+        Backend.AsyncPoll();
     }
     public bool CustomSignUp(string id, string pw)
     {
