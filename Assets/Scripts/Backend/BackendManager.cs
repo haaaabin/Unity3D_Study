@@ -12,6 +12,22 @@ public class BackendManager : MonoBehaviour {
     bool isLogin = false;
     bool isSignUp = false;
 
+    private static BackendManager instance;
+    void Awake()
+    {
+        instance = this;
+    }
+
+    public static BackendManager Instance()
+    {
+        if (instance == null)
+        {
+            Debug.LogError("BackendManager 인스턴스가 존재하지 않습니다.");
+            return null;
+        }
+        return instance;
+    }
+
     void Start() {
         var bro = Backend.Initialize(true); // 뒤끝 초기화
 
