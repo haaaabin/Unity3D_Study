@@ -65,7 +65,7 @@ public class InGameUI : MonoBehaviour
     }
     public void LoadSelectScene()
     {
-        SceneManager.LoadScene("2. Select");
+        SceneManager.LoadScene("1. Select");
     }
     public void ClearPostingText()
     {
