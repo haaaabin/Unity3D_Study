@@ -44,7 +44,7 @@ public class LoginUI : MonoBehaviour
         bool isSuccess = BackendServerManager.Instance().CustomLogin(inputs[ID_INDEX].text, inputs[PW_INDEX].text);
         if (isSuccess)
         {
-            SceneManager.LoadScene("2. Select");
+            SceneManager.LoadScene("1. Select");
         }
         else
         {
