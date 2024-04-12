@@ -23,6 +23,9 @@ public class InGameUI : MonoBehaviour
     public GameObject btn_noticeBoard_object;
     public GameObject noticeBoard_object;
     public GameObject noticeBoard_write_object;
+    public GameObject noticeBoard_myPost;
+
+    public GameObject ShowPost_Panel;
 
     public TMP_InputField[] input_post;
     private const byte TITLE_INDEX = 0, CONTENT_INDEX = 1;
@@ -32,10 +35,13 @@ public class InGameUI : MonoBehaviour
         btn_noticeBoard_object.SetActive(false);
         noticeBoard_write_object.SetActive(false);
         noticeBoard_object.SetActive(false);
+        noticeBoard_myPost.SetActive(false);
+        ShowPost_Panel.SetActive(false);
     }
     public void ToggleNoticeBoardButton()
     {
         btn_noticeBoard_object.SetActive(!btn_noticeBoard_object.activeSelf);
+        BackendNoticeBoard.Instance().PostGet();
     }
     public void ToggleNoticeBoard()
     {
@@ -44,6 +50,18 @@ public class InGameUI : MonoBehaviour
     public void ToggleNoticeBoardWrite()
     {
         noticeBoard_write_object.SetActive(!noticeBoard_write_object.activeSelf);
+    }
+    public void ToggleNoticeBoardMyPostButton()
+    {
+        noticeBoard_myPost.SetActive(!noticeBoard_myPost.activeSelf);
+    }
+    public void ShowPost()
+    {
+        ShowPost_Panel.SetActive(true);
+    }
+    public void ClosePost()
+    {
+        ShowPost_Panel.SetActive(false);
     }
     public void LoadSelectScene()
     {
