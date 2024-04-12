@@ -31,7 +31,7 @@ public class CharacterSelect : MonoBehaviour
             return;
         }
         PlayerInfo.Instance.Nickname = input_nickname.text;
-        bool isSuccess = BackendLogin.Instance.UpdateNickname(PlayerInfo.Instance.Nickname);
+        bool isSuccess = BackendManager.Instance().UpdateNickname(PlayerInfo.Instance.Nickname);
         if (isSuccess)
         {
             SceneManager.LoadScene("3. InGameJJM");
