@@ -25,8 +25,7 @@ public class InGameUI : MonoBehaviour
     public GameObject noticeBoard_write_object;
 
     public TMP_InputField[] input_post;
-    const byte TITLE_INDEX = 0;
-    const byte CONTENT_INDEX = 1;
+    private const byte TITLE_INDEX = 0, CONTENT_INDEX = 1;
 
     void Start()
     {
