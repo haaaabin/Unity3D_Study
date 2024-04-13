@@ -23,9 +23,8 @@ public class InGameUI : MonoBehaviour
     public GameObject btn_noticeBoard_object;
     public GameObject noticeBoard_object;
     public GameObject noticeBoard_write_object;
-    public GameObject noticeBoard_myPost;
-
     public GameObject ShowPost_Panel;
+    public GameObject btn_delete;
 
     public TMP_InputField[] input_post;
     private const byte TITLE_INDEX = 0, CONTENT_INDEX = 1;
@@ -35,17 +34,17 @@ public class InGameUI : MonoBehaviour
         btn_noticeBoard_object.SetActive(false);
         noticeBoard_write_object.SetActive(false);
         noticeBoard_object.SetActive(false);
-        noticeBoard_myPost.SetActive(false);
         ShowPost_Panel.SetActive(false);
     }
     public void ToggleNoticeBoardButton()
     {
         btn_noticeBoard_object.SetActive(!btn_noticeBoard_object.activeSelf);
-        BackendNoticeBoard.Instance().PostGet();
     }
     public void ToggleNoticeBoard()
     {
-        noticeBoard_object.SetActive(!noticeBoard_object.activeSelf);
+        noticeBoard_object.SetActive(true);
+        BackendNoticeBoard.Instance().isMyPost = false;
+        BackendNoticeBoard.Instance().GetPost();
     }
     public void ToggleNoticeBoardWrite()
     {
@@ -53,7 +52,8 @@ public class InGameUI : MonoBehaviour
     }
     public void ToggleNoticeBoardMyPostButton()
     {
-        noticeBoard_myPost.SetActive(!noticeBoard_myPost.activeSelf);
+        BackendNoticeBoard.Instance().isMyPost = true;
+        BackendNoticeBoard.Instance().GetPost();
     }
     public void ShowPost()
     {
@@ -63,13 +63,20 @@ public class InGameUI : MonoBehaviour
     {
         ShowPost_Panel.SetActive(false);
     }
-    public void LoadSelectScene()
+
+    public void CloseNoticeBoard()
     {
-        SceneManager.LoadScene("1. Select");
+        noticeBoard_object.SetActive(false);
     }
+
     public void ClearPostingText()
     {
         input_post[TITLE_INDEX].text = "";
         input_post[CONTENT_INDEX].text = "";
+    }
+
+    public void LoadSelectScene()
+    {
+        SceneManager.LoadScene("1. Select");
     }
 }

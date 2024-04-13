@@ -11,10 +11,10 @@ public class BackendNoticeBoard : MonoBehaviour
     const byte CONTENT_INDEX = 1;
 
     public GameObject post_Prefab;
-    public Transform myPost_spwanPoint;
     public Transform post_spawnPoint;
     public GameObject post_Content;
 
+    public bool isMyPost;
 
     [System.Serializable]
     public struct PostData
@@ -22,14 +22,15 @@ public class BackendNoticeBoard : MonoBehaviour
         public string nickname;
         public string title;
         public string content;
+        public string inDate;
     }
 
     //게시글 정보를 저장할 구조체 리스트
     public List<PostData> postDataList = new List<PostData>();
+    
+    public Dictionary<string, GameObject> postObjectDic = new Dictionary<string, GameObject>();
 
     private static BackendNoticeBoard instance;
-
-    public object QueryOperator { get; private set; }
 
     void Awake()
     {
@@ -59,7 +60,6 @@ public class BackendNoticeBoard : MonoBehaviour
         string title = input_post[TITLE_INDEX].text;
         string content = input_post[CONTENT_INDEX].text;
 
-
         if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(content))
         {
             Debug.LogError("제목 또는 내용이 비어있습니다.");
@@ -72,12 +72,13 @@ public class BackendNoticeBoard : MonoBehaviour
             { "like", like },
             { "title", title },
             { "content", content },
+            //{ "gamer_id", id },
         };
         var bro = Backend.GameData.Insert("notice_table", param);
         if (bro.IsSuccess())
         {
             Debug.Log("게시글 작성 성공");
-            PostGet();
+            GetPost();
         }
         else
         {
@@ -85,31 +86,41 @@ public class BackendNoticeBoard : MonoBehaviour
         }
     }
 
-    public void PostGet()
+
+    public void GetPost()
     {
         Debug.Log("게시글 조회 함수를 호출합니다.");
 
-        var bro = Backend.GameData.GetMyData("notice_table", new Where());
-        if(bro.IsSuccess())
+        BackendReturnObject bro;
+        if(isMyPost)
+        {
+            bro = Backend.GameData.GetMyData("notice_table", new Where());
+        }
+        else
+        {
+            bro = Backend.GameData.Get("notice_table", new Where());
+        }
+        if (bro.IsSuccess())
         {
             Debug.Log("게시글 조회에 성공했습니다. : " + bro);
 
             LitJson.JsonData postDataJson = bro.FlattenRows();
 
-            if(postDataJson.Count <= 0)
+            if (postDataJson.Count <= 0)
             {
                 Debug.LogWarning("데이터가 존재하지 않습니다.");
             }
             else
             {
-                //기존에 불러온 게시글 데이터를 비운다.
-                postDataList.Clear();
+                //새로운 게시글 데이터를 임시 리스트에 추가
+                List<PostData> tempPostDataList = new List<PostData>();
 
-                for(int i = 0; i< postDataJson.Count; i++)
+                for (int i = 0; i < postDataJson.Count; i++)
                 {
                     string nickname = postDataJson[i]["nickname"].ToString();
                     string title = postDataJson[i]["title"].ToString();
                     string content = postDataJson[i]["content"].ToString();
+                    string inDate = postDataJson[i]["inDate"].ToString();
                     //string date = postDataJson[i]["date"].ToString(); 
 
                     // 새로운 게시글 데이터를 리스트에 추가
@@ -117,8 +128,14 @@ public class BackendNoticeBoard : MonoBehaviour
                     postData.nickname = nickname;
                     postData.title = title;
                     postData.content = content;
+                    postData.inDate = inDate;
                     postDataList.Add(postData);
+                    tempPostDataList.Add(postData);
+
                 }
+                //기존의 게시글 데이터를 지우지 않고 임시 리스트에 추가한 후에 한꺼번에 갱신
+                postDataList.Clear();
+                postDataList.AddRange(tempPostDataList);
                 AddPostList();
             }
         }
@@ -126,18 +143,19 @@ public class BackendNoticeBoard : MonoBehaviour
         {
             Debug.LogError("게시글 조회 실패 : " + bro.GetErrorCode());
         }
+
     }
 
     private void AddPostList()
     {
-        // 기존에 생성된 게시글 UI 요소들을 제거한다.
+        //// 기존에 생성된 게시글 UI 요소들을 제거한다.
         foreach (Transform child in post_spawnPoint)
         {
             Destroy(child.gameObject);
         }
 
         //새로운 게시글 데이터를 이용하여 UI 요소 생성
-        foreach(PostData postData in postDataList)
+        foreach (PostData postData in postDataList)
         {
             GameObject postObject = Instantiate(post_Prefab, post_spawnPoint);
 
@@ -145,14 +163,21 @@ public class BackendNoticeBoard : MonoBehaviour
             postObject.transform.Find("Text_Info/Title").GetComponent<TextMeshProUGUI>().text = postData.title;
             postObject.transform.Find("Text_Info/Info").GetComponent<TextMeshProUGUI>().text = postData.content;
 
-            Button button = postObject.GetComponent<Button>();
+            if (!postObjectDic.ContainsKey(postData.inDate))
+            {
+                //딕셔너리에 게시글 데이터와 게시글 UI 요소를 추가
+                postObjectDic.Add(postData.inDate, postObject);              
+            }
 
+            Button button = postObject.GetComponent<Button>();
             if (button != null)
             {
                 int index = postDataList.IndexOf(postData);     //해당 게시글의 인덱스를 저장
                 button.onClick.AddListener(() => ShowPost_Panel(index));
             }
+
         }
+
     }
 
     //게시글 상세보기 
@@ -166,16 +191,40 @@ public class BackendNoticeBoard : MonoBehaviour
         show_title.text = postDataList[index].title;
         show_content.text = postDataList[index].content;
 
+        Button button = InGameUI.Instance().btn_delete.GetComponent<Button>();
+        if(button != null)
+        {
+            button.onClick.AddListener(() => deletePost(postDataList[index].inDate));
+        }
     }
+    public void deletePost(string inDate)
+    {
+        // 게시글 삭제 요청 보내기
+        var bro = Backend.GameData.DeleteV2("notice_table", inDate, Backend.UserInDate);
+        if (bro.IsSuccess())
+        {
+            Debug.Log("게시글 삭제 성공");
 
-    //public void MyPostShow()
-    //{
-       
-    //}
+            if(postObjectDic.ContainsKey(inDate))
+            {
+                //딕셔너리에서 게시글 데이터와 게시글 UI 요소를 제거
+                Destroy(postObjectDic[inDate]);
+                postObjectDic.Remove(inDate);
 
-    //public void DeletePost()
-    //{
+                postDataList.RemoveAll(post => post.inDate == inDate);
+                ////게시글 리스트 갱신
+                GetPost();
+                //게시글 패널 닫기
+                InGameUI.Instance().ClosePost();
+                //게시글 삭제 성공 메시지 출력
+                Debug.Log("게시글 삭제 성공");
+               
+            }
+        }
+        else
+        {
+            Debug.LogError("게시글 삭제 실패 : " + bro.GetErrorCode());
+        }
 
-    //    //Backend.PlayerData.DeleteMyData("notice_table", )
-    //}
+    }
 }

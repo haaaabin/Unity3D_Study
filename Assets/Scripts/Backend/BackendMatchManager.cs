@@ -174,7 +174,7 @@ public partial class BackendMatchManager : MonoBehaviour
         Backend.Match.OnMatchInGameAccess += (args) =>
         {
             Debug.Log("OnMatchInGameAccess : " + args.ErrInfo);
-            SceneManager.LoadScene("2. InGameJJM");
+            SceneManager.LoadScene("2. InGameCHB");
             // 세션이 인게임 룸에 접속할 때마다 호출 (각 클라이언트가 인게임 룸에 접속할 때마다 호출됨)
         };
 
