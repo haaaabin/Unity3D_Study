@@ -42,7 +42,7 @@ public partial class BackendMatchManager : MonoBehaviour
     private string inGameRoomToken = string.Empty;  // 게임 룸 토큰 (인게임 접속 토큰)
     public SessionId hostSession { get; private set; }  // 호스트 세션
     private ServerInfo roomInfo = null;             // 게임 룸 정보
-    [SerializeField]
+    [field: SerializeField]
     public bool isConnectMatchServer { get; private set; } = false;
     [SerializeField]
     private bool isConnectInGameServer = false;
@@ -104,9 +104,17 @@ public partial class BackendMatchManager : MonoBehaviour
         };
 
         // 대기방 생성 이벤트
-        Backend.Match.OnMatchMakingRoomCreate += (args) =>
+        Backend.Match.OnMatchMakingRoomCreate += (MatchMakingInteractionEventArgs args) =>
         {
             Debug.Log("OnMatchMakingRoomCreate : " + args.ErrInfo + " : " + args.Reason);
+            if (args.ErrInfo == ErrorCode.Success)
+            {
+                RequestMatchMaking(0);
+            }
+            else
+            {
+                Backend.Match.CreateMatchRoom();
+            }
         };
 
         // 매칭 신청/최초/성사 이벤트

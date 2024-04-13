@@ -1,6 +1,4 @@
 using BackEnd;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /* [ BackendInGame.cs ]
@@ -19,12 +17,12 @@ public partial class BackendMatchManager : MonoBehaviour
     // 인게임 룸 접속
     private void AccessInGameRoom(string roomToken)
     {
-        SelectUI.Instance().SetPopUpDescription("게임 방 접속 중");
+        SelectUI.Instance().SetProgressText("게임 방 접속 중");
 
         Backend.Match.JoinGameRoom(roomToken);
     }
     // 인게임 서버 접속 종료
-    public void LeaveInGameRoom()
+    public void LeaveInGameServer()
     {
         isConnectInGameServer = false;
         Backend.Match.LeaveGameServer();
