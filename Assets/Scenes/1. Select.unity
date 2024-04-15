@@ -1678,6 +1678,11 @@ PrefabInstance:
       propertyPath: enableMobile
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4066969605109620030, guid: 907fd825e3988774caab4234b943bf44,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5992169986074667956, guid: 907fd825e3988774caab4234b943bf44,
         type: 3}
       propertyPath: m_UseGravity
