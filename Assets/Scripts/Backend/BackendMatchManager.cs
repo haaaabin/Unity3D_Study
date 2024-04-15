@@ -266,6 +266,7 @@ public partial class BackendMatchManager : MonoBehaviour
         Backend.Match.OnMatchInGameAccess += (args) =>
         {
             Debug.Log("OnMatchInGameAccess : " + args.ErrInfo);
+            // 세션이 인게임 룸에 접속할 때마다 호출 (각 클라이언트가 인게임 룸에 접속할 때마다 호출됨)
             // 세션(클라이언트)이 인게임 룸에 접속할 때마다 호출
             ProcessMatchInGameAccess(args);
         };
