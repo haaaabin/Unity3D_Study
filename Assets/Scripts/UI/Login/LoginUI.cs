@@ -40,7 +40,7 @@ public class LoginUI : MonoBehaviour
         inputs[PW_INDEX].text = "";
     }
     public void ClickLogin()
-    {
+    { 
         bool isSuccess = BackendServerManager.Instance().CustomLogin(inputs[ID_INDEX].text, inputs[PW_INDEX].text);
         if (isSuccess)
         {
