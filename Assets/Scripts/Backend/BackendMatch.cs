@@ -209,6 +209,12 @@ public partial class BackendMatchManager : MonoBehaviour
     {
 
         ErrorInfo errorInfo;
+        if (sessionIdList != null)
+        {
+            Debug.Log("이전 세션 저장 정보");
+            sessionIdList.Clear();
+        }
+        
         if (!Backend.Match.JoinGameServer(args.RoomInfo.m_inGameServerEndPoint.m_address, args.RoomInfo.m_inGameServerEndPoint.m_port, false, out errorInfo))
         {
             var debugLog = string.Format(FAIL_ACCESS_INGAME, errorInfo.ToString(), string.Empty);
@@ -222,5 +228,15 @@ public partial class BackendMatchManager : MonoBehaviour
         isReconnectProcess = false;
         inGameRoomToken = args.RoomInfo.m_inGameRoomToken;
         isSandBoxGame = args.RoomInfo.m_enableSandbox;
+        var info = GetMatchInfo(args.MatchCardIndate);
+        if (info == null)
+        {
+            Debug.LogError("매치 정보를 불러오는 데 실패했습니다.");
+            return;
+        }
+
+        // nowMatchType = info.matchType;
+        // nowModeType = info.matchModeType;
+        // numOfClient = int.Parse(info.headCount);
     }
 }

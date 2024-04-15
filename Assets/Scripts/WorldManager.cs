@@ -1,6 +1,5 @@
 using BackEnd.Tcp;
 using Protocol;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,8 +10,9 @@ public class WorldManager : MonoBehaviour
 
     #region 플레이어
     public GameObject playerPool;
-    public GameObject[] playerPrefab;
+    public GameObject playerPrefab;
     private Dictionary<SessionId, Player> players;
+
     public GameObject startPointObject;
     private Vector3 startingPoint;
 
@@ -26,7 +26,7 @@ public class WorldManager : MonoBehaviour
     void Start()
     {
         InitializeGame();
-        GameManager.GetInstance().ChangeState(GameManager.GameState.InGame);
+        GameManager.Instance().ChangeState(GameManager.GameState.InGame);
     }
     public bool InitializeGame()
     {
@@ -42,6 +42,7 @@ public class WorldManager : MonoBehaviour
         SetPlayerInfo();
         return true;
     }
+
     public void SetPlayerInfo()
     {
         if (BackendMatchManager.Instance().sessionIdList == null)
@@ -64,7 +65,7 @@ public class WorldManager : MonoBehaviour
         int index = 0;
         foreach (var sessionId in gamers)
         {
-            GameObject player = Instantiate(playerPrefab[(int)PlayerInfo.Instance.PlayerType], new Vector3(startingPoint.x, startingPoint.y, startingPoint.z), Quaternion.identity, playerPool.transform);
+            GameObject player = Instantiate(playerPrefab, new Vector3(startingPoint.x, startingPoint.y, startingPoint.z), Quaternion.identity, playerPool.transform);
             players.Add(sessionId, player.GetComponent<Player>());
 
             if (BackendMatchManager.Instance().IsMySessionId(sessionId))
@@ -96,7 +97,6 @@ public class WorldManager : MonoBehaviour
         }
         if (BackendMatchManager.Instance().IsHost() != true && args.From.SessionId == myPlayerIndex)
         {
-            Debug.LogWarning("호스트가 아닌데 호스트만 보낼 수 있는 데이터를 받았습니다.");
             return;
         }
         if (players == null)
@@ -108,7 +108,6 @@ public class WorldManager : MonoBehaviour
         {
             case Protocol.Type.Key:
                 KeyMessage keyMessage = DataParser.ReadJsonData<KeyMessage>(args.BinaryUserData);
-                Debug.LogFormat("Key Message : {0} / {1} / {2} / {3}", keyMessage.keyData, keyMessage.x, keyMessage.y, keyMessage.z);
                 ProcessKeyEvent(args.From.SessionId, keyMessage);
                 break;
             case Protocol.Type.PlayerMove:
@@ -196,5 +195,21 @@ public class WorldManager : MonoBehaviour
     public bool IsMyPlayerRotate()
     {
         return players[myPlayerIndex].isRotate;
+    }
+    public GameSyncMessage GetNowGameState(SessionId hostSession)
+    {
+        int numOfClient = players.Count;
+
+        float[] xPos = new float[numOfClient];
+        float[] zPos = new float[numOfClient];
+        bool[] online = new bool[numOfClient];
+        int index = 0;
+        foreach (var player in players)
+        {
+            xPos[index] = player.Value.GetPosition().x;
+            zPos[index] = player.Value.GetPosition().z;
+            index++;
+        }
+        return new GameSyncMessage(hostSession, numOfClient, xPos, zPos, online);
     }
 }

@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using BackEnd.Tcp;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace Protocol
@@ -23,6 +23,7 @@ namespace Protocol
         GameStart,      // 게임 시작
         GameEnd,        // 게임 종료
         GameSync,       // 플레이어 재접속 시 게임 현재 상황 싱크
+        PlayerType,     // 플레이어 타입
         Max
     }
     // 조이스틱 키 이벤트 코드
@@ -42,6 +43,15 @@ namespace Protocol
             this.type = type;
         }
     }
+    // public class PlayerTypeMessage : Message
+    // {
+    //     public PlayerType playerType;
+
+    //     public PlayerTypeMessage(SessionId session, PlayerType type) : base(Type.PlayerType)
+    //     {
+    //         this.playerType = type;
+    //     }
+    // }
     public class KeyMessage : Message
     {
         public int keyData;
@@ -84,23 +94,20 @@ namespace Protocol
         public int count = 0;
         public float[] xPos = null;
         public float[] zPos = null;
-        public int[] hpValue = null;
         public bool[] onlineInfo = null;
 
-        public GameSyncMessage(SessionId host, int count, float[] x, float[] z, int[] hp, bool[] online) : base(Type.GameSync)
+        public GameSyncMessage(SessionId host, int count, float[] x, float[] z, bool[] online) : base(Type.GameSync)
         {
             this.host = host;
             this.count = count;
             this.xPos = new float[count];
             this.zPos = new float[count];
-            this.hpValue = new int[count];
             this.onlineInfo = new bool[count];
 
             for (int i = 0; i < count; ++i)
             {
                 xPos[i] = x[i];
                 zPos[i] = z[i];
-                hpValue[i] = hp[i];
                 onlineInfo[i] = online[i];
             }
         }

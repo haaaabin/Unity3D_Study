@@ -6,6 +6,7 @@ using UnityEngine;
 using LitJson;
 using UnityEngine.SceneManagement;
 using Protocol;
+using System.Linq;
 
 
 /* [ partial class 매치 매니저 ]
@@ -38,13 +39,12 @@ public partial class BackendMatchManager : MonoBehaviour
         public string headCount;            // 매칭 인원
         public bool isSandBoxEnable;        // 샌드박스 모드 (AI매칭)
     }
+    private static BackendMatchManager instance = null;
     public List<MatchInfo> matchInfos { get; private set; } = new List<MatchInfo>();  // 콘솔에서 생성한 매칭 카드들의 리스트
     public List<SessionId> sessionIdList { get; private set; }  // 매치에 참가중인 유저들의 세션 목록
     public Dictionary<SessionId, MatchUserGameRecord> gameRecords { get; private set; } = null;  // 매치에 참가중인 유저들의 매칭 기록
-    private static BackendMatchManager instance = null;
     private string inGameRoomToken = string.Empty;  // 게임 룸 토큰 (인게임 접속 토큰)
     public SessionId hostSession { get; private set; }  // 호스트 세션
-    private ServerInfo roomInfo = null;             // 게임 룸 정보
     [field: SerializeField]
     public bool isConnectMatchServer { get; private set; } = false;
     [SerializeField]
@@ -319,6 +319,7 @@ public partial class BackendMatchManager : MonoBehaviour
         {
             var nickName = Backend.Match.GetNickNameBySessionId(args.GameRecord.m_sessionId);
             Debug.Log(string.Format("[{0}] 온라인되었습니다. - {1} : {2}", nickName, args.ErrInfo, args.Reason));
+            ProcessSessionOnline(args.GameRecord.m_sessionId, nickName);
         };
 
         // 다른 유저 혹은 자기자신이 접속이 끊어졌을 때 모든 클라이언트에게 호출
@@ -379,6 +380,15 @@ public partial class BackendMatchManager : MonoBehaviour
             matchInfos.Add(matchInfo);
         }
         Debug.Log("매칭카드 리스트 불러오기 성공 : " + matchInfos.Count);
+    }
+    public MatchInfo GetMatchInfo(string indate)
+    {
+        var result = matchInfos.FirstOrDefault(x => x.inDate == indate);
+        if (result.Equals(default(MatchInfo)) == true)
+        {
+            return null;
+        }
+        return result;
     }
     public void SetHostSession(SessionId host)
     {

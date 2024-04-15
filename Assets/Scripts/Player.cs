@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     private SessionId index = 0;
     private string nickName = string.Empty;
+    public PlayerType playerType = PlayerType.Boy;
     [SerializeField]
     private bool isMe = false;
     public GameObject nameObject;

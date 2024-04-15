@@ -1,5 +1,6 @@
 using BackEnd;
 using BackEnd.Tcp;
+using Protocol;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ using UnityEngine;
 public partial class BackendMatchManager : MonoBehaviour
 {
     private bool isSetHost = false;                 // 호스트 세션 결정했는지 여부
+    // public Dictionary<SessionId, PlayerType> playerTypeList; // 세션별 플레이어 타입
 
     // 게임 로그
     private string FAIL_ACCESS_INGAME = "인게임 접속 실패 : {0} - {1}";
@@ -47,6 +49,7 @@ public partial class BackendMatchManager : MonoBehaviour
 
         foreach (var record in args.GameRecords)
         {
+            Debug.LogFormat("기존 인게임 유저 정보 [{0}] : {1}", record.m_sessionId, record.m_nickname);
             sessionIdList.Add(record.m_sessionId);
             gameRecords.Add(record.m_sessionId, record);
         }
@@ -80,15 +83,15 @@ public partial class BackendMatchManager : MonoBehaviour
         // 세션 정보는 누적되어 들어있기 때문에 이미 저장한 세션이면 건너뛴다.
 
         var record = args.GameRecord;
-        Debug.Log(string.Format(string.Format("인게임 접속 유저 정보 [{0}] : {1}", args.GameRecord.m_sessionId, args.GameRecord.m_nickname)));
+        Debug.Log(string.Format(string.Format("새로운 인게임 유저 정보 [{0}] : {1}", args.GameRecord.m_sessionId, args.GameRecord.m_nickname)));
         if (!sessionIdList.Contains(args.GameRecord.m_sessionId))
         {
             // 세션 정보, 게임 기록 등을 저장
             sessionIdList.Add(record.m_sessionId);
-            //gameRecords.Add(record.m_sessionId, record);
+            gameRecords.Add(record.m_sessionId, record);
 
             Debug.Log(string.Format(NUM_INGAME_SESSION, sessionIdList.Count));
-        }
+        }               
     }
 
     // 인게임 룸 접속
@@ -104,6 +107,8 @@ public partial class BackendMatchManager : MonoBehaviour
         isConnectInGameServer = false;
         Backend.Match.LeaveGameServer();
     }
+
+    // 호스트에서 보낸 세션리스트로 갱신
     public void SetPlayerSessionList(List<SessionId> sessions)
     {
         sessionIdList = sessions;
@@ -114,5 +119,23 @@ public partial class BackendMatchManager : MonoBehaviour
     {
         var byteArray = DataParser.DataToJsonData<T>(msg);
         Backend.Match.SendDataToInGameRoom(byteArray);
+    }
+        private void ProcessSessionOnline(SessionId sessionId, string nickName)
+    {
+        // 호스트가 아니면 아무 작업 안함 (호스트가 해줌)
+        if (isHost)
+        {
+            // 재접속 한 클라이언트가 인게임 씬에 접속하기 전 게임 정보값을 전송 시 nullptr 예외가 발생하므로 조금
+            // 2초정도 기다린 후 게임 정보 메시지를 보냄
+            Invoke("SendGameSyncMessage", 2.0f);
+        }
+    }
+
+    // Invoke로 실행됨
+    private void SendGameSyncMessage()
+    {
+        // 현재 게임 상황 (위치, hp 등등...)
+        var message = WorldManager.instance.GetNowGameState(hostSession);
+        SendDataToInGame(message);
     }
 }
