@@ -1,22 +1,15 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class InGameUI : MonoBehaviour
 {
     private static InGameUI instance;
 
-    public GameObject btn_noticeBoard_object;
-    public GameObject noticeBoard_object;
-    public GameObject noticeBoard_write_object;
-    public GameObject ShowPost_Panel;
+    public GameObject popup_btn_noticeboard, panel_noticeboard;
+    public GameObject panel_write, panel_openPost;
 
-    public Button writebtn;
-    public Button allpostbtn;
-    public Button mypostbtn;
-    public Button closebtn;
+    public Button btn_write, btn_allPost, btn_myPost, btn_close;
 
     public TMP_InputField[] input_post;
     private const byte TITLE_INDEX = 0, CONTENT_INDEX = 1;
@@ -38,94 +31,71 @@ public class InGameUI : MonoBehaviour
 
     void Start()
     {
-        IntializeNoticeBoardUI();
-    }
-
-    // 게시판 UI 초기화
-    public void IntializeNoticeBoardUI()
-    {
-        SetActiveNoticeBoardUI(false);
-        SetActiveShowPostPanel(false);
-    }
-
-    // 게시판 UI 활성화
-    public void SetActiveNoticeBoardUI(bool active)
-    {
-        btn_noticeBoard_object.SetActive(active);
-        noticeBoard_object.SetActive(active);
-        noticeBoard_write_object.SetActive(active);
-    }
-
-    // 게시판 게시글 보기 패널 활성화
-    public void SetActiveShowPostPanel(bool active)
-    {
-        ShowPost_Panel.SetActive(active);
+        popup_btn_noticeboard.SetActive(false);
+        panel_noticeboard.SetActive(false);
+        panel_write.SetActive(false);
+        panel_openPost.SetActive(false);
     }
 
     // 버튼 사용 가능 여부 설정
     public void SetButtonInteractable(bool interactable)
     {
-        writebtn.interactable = interactable;
-        allpostbtn.interactable = interactable;
-        mypostbtn.interactable = interactable;
-        closebtn.interactable = interactable;
+        btn_write.interactable = interactable;
+        btn_allPost.interactable = interactable;
+        btn_myPost.interactable = interactable;
+        btn_close.interactable = interactable;
     }
 
-    //게시판 토글 버튼
+    // 게시판 열기 버튼 On/Off
     public void ToggleNoticeBoardButton()
     {
-        btn_noticeBoard_object.SetActive(!btn_noticeBoard_object.activeSelf);
+        popup_btn_noticeboard.SetActive(!popup_btn_noticeboard.activeSelf);
     }
     
-    //게시판 열기
+
+    // 게시판 On/Off
     public void ToggleNoticeBoard()
     {
-        noticeBoard_object.SetActive(true);
+        panel_noticeboard.SetActive(!panel_noticeboard.activeSelf);
+        if (panel_noticeboard.activeSelf)
+        {
+            AllPost();
+        }
+    }
+
+    // 쓰기 패널 On/Off
+    public void TogglePanelWrite()
+    {
+        input_post[TITLE_INDEX].text = "";
+        input_post[CONTENT_INDEX].text = "";
+        panel_write.SetActive(!panel_write.activeSelf);
+        SetButtonInteractable(!panel_write.activeSelf);
+    }
+    // 게시글 On/Off
+    public void TogglePost()
+    {
+        panel_openPost.SetActive(!panel_openPost.activeSelf);
+        SetButtonInteractable(!panel_openPost.activeSelf);
+    }
+
+    // 게시글 쓰기
+    public void Write()
+    {
+        BackendNoticeBoard.Instance().WritePost();
+        TogglePanelWrite();
+    }
+
+    // 모든 게시글 불러오기
+    public void AllPost()
+    {
         BackendNoticeBoard.Instance().isMyPost = false;
         BackendNoticeBoard.Instance().GetPost();
     }
 
-    //게시판 쓰기
-    public void NoticeBoardWrite()
-    {
-        noticeBoard_write_object.SetActive(!noticeBoard_write_object.activeSelf);
-        SetButtonInteractable(!noticeBoard_write_object.activeSelf);
-
-    }
-
-    //게시판 내 게시글 보기
-    public void NoticeBoardMyPostButton()
+    // 내 게시글 불러오기
+    public void MyPost()
     {
         BackendNoticeBoard.Instance().isMyPost = true;
         BackendNoticeBoard.Instance().GetPost();
-    }
-
-    //게시판 상세 보기
-    public void ShowPost()
-    {
-        SetActiveShowPostPanel(true);
-        SetButtonInteractable(false);
-    }
-
-    public void ClosePost()
-    {
-        SetActiveShowPostPanel(false);
-        SetButtonInteractable(true);
-    }
-
-    public void CloseNoticeBoard()
-    {
-        noticeBoard_object.SetActive(false);
-    }
-
-    public void ClearPostingText()
-    {
-        input_post[TITLE_INDEX].text = "";
-        input_post[CONTENT_INDEX].text = "";
-    }
-
-    public void LoadSelectScene()
-    {
-        SceneManager.LoadScene("1. Select");
     }
 }

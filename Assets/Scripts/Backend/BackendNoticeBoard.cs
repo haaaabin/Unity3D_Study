@@ -1,8 +1,6 @@
 using BackEnd;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;   
 
@@ -197,7 +195,7 @@ public class BackendNoticeBoard : MonoBehaviour
             return;
         }
 
-        InGameUI.Instance().ShowPost();
+        InGameUI.Instance().TogglePost();
         
         foreach (PostData postData in postDataList)
         {
@@ -223,8 +221,6 @@ public class BackendNoticeBoard : MonoBehaviour
 
             //리스트에서도 삭제
             postDataList.RemoveAll(post => post.inDate == inDate);
-
-            InGameUI.Instance().ClosePost();
             AddPostList();
             
             Debug.Log("게시글 삭제 성공");
