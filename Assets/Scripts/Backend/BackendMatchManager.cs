@@ -259,7 +259,6 @@ public partial class BackendMatchManager : MonoBehaviour
             // 나보다 늦게 들어온 플레이어들의 정보는 OnMatchInGameAccess 에서 수신됨
             Debug.Log("OnSessionListInServer : " + args.ErrInfo);
             ProcessMatchInGameSessionList(args);
-            GameManager.Instance().ChangeState(GameManager.GameState.Start);
         };
 
         // 클라이언트가 게임방 접속에 성공했을 때 모든 유저에게 호출
@@ -289,6 +288,14 @@ public partial class BackendMatchManager : MonoBehaviour
         {
             // 각 클라이언트들이 서버를 통해 주고받은 패킷들
             // 서버는 단순 브로드캐스팅만 지원 (서버에서 어떠한 연산도 수행하지 않음)
+
+            // 게임 사전 설정
+            if (PrevGameMessage(args.BinaryUserData) == true)
+            {
+                // 게임 사전 설정을 진행하였으면 바로 리턴
+                return;
+            }
+
             if (WorldManager.instance == null)
             {
                 // 월드 매니저가 존재하지 않으면 바로 리턴

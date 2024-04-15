@@ -43,15 +43,6 @@ namespace Protocol
             this.type = type;
         }
     }
-    // public class PlayerTypeMessage : Message
-    // {
-    //     public PlayerType playerType;
-
-    //     public PlayerTypeMessage(SessionId session, PlayerType type) : base(Type.PlayerType)
-    //     {
-    //         this.playerType = type;
-    //     }
-    // }
     public class KeyMessage : Message
     {
         public int keyData;
@@ -86,6 +77,18 @@ namespace Protocol
             this.yDir = dir.y;
             this.zDir = dir.z;
         }
+    }
+
+    public class LoadGameSceneMessage : Message
+    {
+        public LoadGameSceneMessage() : base(Type.LoadGameScene)
+        {
+
+        }
+    }
+    public class GameStartMessage : Message
+    {
+        public GameStartMessage() : base(Type.GameStart) { }
     }
 
     public class GameSyncMessage : Message
