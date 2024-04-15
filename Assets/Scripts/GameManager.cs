@@ -64,11 +64,20 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(.1f); //1초 단위
         }
     }
+    private void GameStart()
+    {
+        //delegate 초기화
+        InGame = delegate { };
+        SceneManager.LoadScene("2. InGameJJM");
+    }
     public void ChangeState(GameState state, Action<bool> func = null)
     {
         gameState = state;
         switch (gameState)
         {
+            case GameState.Start:
+                GameStart();
+                break;
             case GameState.InGame:
                 // 코루틴 시작
                 StartCoroutine(InGameUpdateCoroutine);

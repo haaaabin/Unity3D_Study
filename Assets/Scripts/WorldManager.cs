@@ -60,11 +60,12 @@ public class WorldManager : MonoBehaviour
         }
 
         players = new Dictionary<SessionId, Player>();
-        BackendMatchManager.Instance().SetPlayerSessionList(gamers);
+        // BackendMatchManager.Instance().SetPlayerSessionList(gamers);
 
         int index = 0;
         foreach (var sessionId in gamers)
         {
+            Debug.LogFormat("플레이어 생성 : {0}", sessionId);
             GameObject player = Instantiate(playerPrefab, new Vector3(startingPoint.x, startingPoint.y, startingPoint.z), Quaternion.identity, playerPool.transform);
             players.Add(sessionId, player.GetComponent<Player>());
 
