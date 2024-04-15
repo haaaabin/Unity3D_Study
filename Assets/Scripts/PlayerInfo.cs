@@ -1,7 +1,6 @@
 using UnityEngine;
 
 public enum PlayerType {
-    None,
     Boy,
     Girl
 }
