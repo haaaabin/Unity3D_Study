@@ -259,7 +259,7 @@ public partial class BackendMatchManager : MonoBehaviour
             // 나보다 늦게 들어온 플레이어들의 정보는 OnMatchInGameAccess 에서 수신됨
             Debug.Log("OnSessionListInServer : " + args.ErrInfo);
             ProcessMatchInGameSessionList(args);
-            SceneManager.LoadScene("2. InGameJJM");
+            GameManager.Instance().ChangeState(GameManager.GameState.Start);
         };
 
         // 클라이언트가 게임방 접속에 성공했을 때 모든 유저에게 호출

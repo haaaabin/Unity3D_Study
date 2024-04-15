@@ -83,9 +83,9 @@ public partial class BackendMatchManager : MonoBehaviour
         // 세션 정보는 누적되어 들어있기 때문에 이미 저장한 세션이면 건너뛴다.
 
         var record = args.GameRecord;
-        Debug.Log(string.Format(string.Format("새로운 인게임 유저 정보 [{0}] : {1}", args.GameRecord.m_sessionId, args.GameRecord.m_nickname)));
         if (!sessionIdList.Contains(args.GameRecord.m_sessionId))
         {
+            Debug.Log(string.Format(string.Format("새로운 인게임 유저 정보 [{0}] : {1}", args.GameRecord.m_sessionId, args.GameRecord.m_nickname)));
             // 세션 정보, 게임 기록 등을 저장
             sessionIdList.Add(record.m_sessionId);
             gameRecords.Add(record.m_sessionId, record);
