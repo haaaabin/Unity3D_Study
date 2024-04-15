@@ -1,13 +1,12 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SelectUI : MonoBehaviour
 {
     private static SelectUI instance;
-    public GameObject popup_object, select_object, loading_object, loading;
+    public GameObject popup_object, select_object, loading_object;
     public TMP_InputField input_nickname;
-    public TMP_Text popup_description;
+    public TMP_Text topbar_progress;
 
     void Awake()
     {
@@ -27,54 +26,42 @@ public class SelectUI : MonoBehaviour
     void Start()
     {
         popup_object.SetActive(false);
+        select_object.SetActive(false);
         loading_object.SetActive(false);
         BackendMatchManager.Instance().GetMatchList();
-        BackendMatchManager.Instance().JoinMatchMakingServer();
     }
     public void SelectBoyCharacter()
     {
         PlayerInfo.Instance.PlayerType = PlayerType.Boy;
         popup_object.SetActive(true);
+        select_object.SetActive(true);
+        SetProgressText("닉네임 설정");
+        BackendMatchManager.Instance().JoinMatchMakingServer();
     }
     public void SelectGirlCharacter()
     {
         PlayerInfo.Instance.PlayerType = PlayerType.Girl;
         popup_object.SetActive(true);
+        select_object.SetActive(true);
+        SetProgressText("닉네임 설정");
+        BackendMatchManager.Instance().JoinMatchMakingServer();
     }
-    public void SetPopUpDescription(string description)
+    public void SetProgressText(string text)
     {
-        popup_description.text = description;
+        topbar_progress.text = text;
     }
-    public void LoadingObject()
+    public bool SetNickname()
     {
-        select_object.SetActive(false);
-        loading_object.SetActive(true);
-        loading.SetActive(true);
-    }
-    public void ClickGameStart()
-    {
-        if (string.IsNullOrEmpty(input_nickname.text))
-        {
-            Debug.Log("닉네임을 입력해주세요.");
-            return;
-        }
         PlayerInfo.Instance.Nickname = input_nickname.text;
-        bool isSuccess = BackendServerManager.Instance().UpdateNickname(PlayerInfo.Instance.Nickname);
-        if (isSuccess)
+        return BackendServerManager.Instance().UpdateNickname(PlayerInfo.Instance.Nickname);
+    }
+    public void Play()
+    {
+        if (SetNickname())
         {
-            DoJoinMatchserver();
+            select_object.SetActive(false);
+            loading_object.SetActive(true);
+            BackendMatchManager.Instance().CreateMatchRoom();
         }
-    }
-    public void DoJoinMatchserver()
-    {
-        LoadingObject();
-        BackendMatchManager.Instance().CreateMatchRoom();
-        BackendMatchManager.Instance().RequestMatchMaking(0);
-    }
-
-    public void DoLeaveMatchserver()
-    {
-       BackendMatchManager.Instance().LeaveMatchRoom();
-       BackendMatchManager.Instance().LeaveInGameRoom();
     }
 }

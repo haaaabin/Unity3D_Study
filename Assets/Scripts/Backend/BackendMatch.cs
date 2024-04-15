@@ -17,7 +17,7 @@ public partial class BackendMatchManager : MonoBehaviour
     private string FAIL_CONNECT_MATCHSERVER = "매치 서버 접속 실패 : {0}";
     private string SUCCESS_CONNECT_MATCHSERVER = "매치 서버 접속 성공";
     private string SUCCESS_MATCHMAKE = "매칭 성공 : {0}";
-    private string SUCCESS_REGIST_MATCHMAKE = "매칭 대기열에 등록되었습니다.";
+    private string SUCCESS_REGIST_MATCHMAKE = "매칭 대기열에 등록";
     private string FAIL_REGIST_MATCHMAKE = "매칭 실패 : {0}";
     private string CANCEL_MATCHMAKE = "매칭 신청 취소 : {0}";
     private string INVAILD_MATCHTYPE = "잘못된 매치 타입입니다.";
@@ -46,6 +46,7 @@ public partial class BackendMatchManager : MonoBehaviour
     // 매칭 서버 접속 종료
     public void LeaveMatchMakingServer()
     {
+        Debug.Log("매치 서버 접속 종료");
         isConnectMatchServer = false;
         Backend.Match.LeaveMatchMakingServer();
     }
@@ -53,7 +54,7 @@ public partial class BackendMatchManager : MonoBehaviour
     // 매칭 대기방 생성 및 입장
     public bool CreateMatchRoom()
     {
-        SelectUI.Instance().SetPopUpDescription("매칭 대기방 생성 중");
+        SelectUI.Instance().SetProgressText("매칭 대기방 생성 중");
 
         if (!isConnectMatchServer)
         {
@@ -69,12 +70,13 @@ public partial class BackendMatchManager : MonoBehaviour
     // 매칭 대기 방 나가기
     public void LeaveMatchRoom()
     {
+        Debug.Log("매칭 대기방 나가기");
         Backend.Match.LeaveMatchRoom();
     }
     // 매칭 신청하기
     public void RequestMatchMaking(int index)
     {
-        SelectUI.Instance().SetPopUpDescription("매칭 신청중");
+        SelectUI.Instance().SetProgressText("매칭 신청중");
 
         // 매청 서버에 연결되어 있지 않으면 매칭 서버 접속
         if (!isConnectMatchServer)
@@ -96,6 +98,11 @@ public partial class BackendMatchManager : MonoBehaviour
         //nowMatchType = matchInfos[index].matchType;
         //nowModeType = matchInfos[index].matchModeType;
         //numOfClient = int.Parse(matchInfos[index].headCount);
+    }
+    // 매칭 대기방 퇴장
+    public void CancelMatchMaking()
+    {
+        Backend.Match.CancelMatchMaking();
     }
 
     // 매칭 서버 접속에 대한 리턴값
@@ -134,8 +141,8 @@ public partial class BackendMatchManager : MonoBehaviour
         {
             case ErrorCode.Success:
                 // 매칭 성공했을 때
+                SelectUI.Instance().SetProgressText("인게임 서버 접속 중");
                 debugLog = string.Format(SUCCESS_MATCHMAKE, args.Reason);
-                SelectUI.Instance().SetPopUpDescription("인게임 서버 접속 중");
                 ProcessMatchSuccess(args);
                 break;
 
@@ -145,6 +152,7 @@ public partial class BackendMatchManager : MonoBehaviour
                 // 매칭 신청 성공했을 때
                 if (args.Reason == string.Empty)
                 {
+                    SelectUI.Instance().SetProgressText(SUCCESS_REGIST_MATCHMAKE);
                     debugLog = SUCCESS_REGIST_MATCHMAKE;
                 }
                 break;
