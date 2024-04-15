@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     private SessionId index = 0;
     private string nickName = string.Empty;
     public PlayerType playerType = PlayerType.Boy;
+
     [SerializeField]
     private bool isMe = false;
     public GameObject nameObject;
@@ -58,7 +59,7 @@ public class Player : MonoBehaviour
         if (BackendMatchManager.Instance() == null)
         {
             // 매칭 인스턴스가 존재하지 않는 경우 (인게임 테스트 용도)
-            Vector3 tmp = new Vector3(joystick.input.x, 0, joystick.input.y);
+            Vector3 tmp = new Vector3(joystick.input.x, joystick.input.y, 0 );
             tmp = Vector3.Normalize(tmp);
             SetMoveVector(tmp);
         }
@@ -161,7 +162,7 @@ public class Player : MonoBehaviour
     }
     public void Move(Vector3 var)
     {
-        // 회전
+        //// 회전
         if (var.Equals(Vector3.zero))
         {
             isRotate = false;
@@ -177,6 +178,28 @@ public class Player : MonoBehaviour
                 isRotate = false;
             }
         }
+
+        //Vector3 inputDir = var.normalized;
+
+        //if(inputDir == Vector3.zero)
+        //{
+        //    isRotate = false;
+        //}
+        ////움직임을 멈췄을 때 다시 처음 각도로 돌아가는 걸 막기 위함
+        //else
+        //{
+
+        //    float rotation = Mathf.Atan2(inputDir.x, inputDir.y) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
+        //    transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, rotation, ref rotationVelocity, smoothRotationTime);
+        //}
+
+        ////입력 방향에 따른 목표 속도
+        //targetSpeed = moveSpeed * inputDir.magnitude;
+        ////현재 속도를 목표 속도로 부드럽게 조절
+        //currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref speedVelocity, smoothMoveTime);
+        ////현재 스피드에서 타겟 스피드까지 smoothMoveTime 동안 변한다.
+        //transform.Translate(transform.forward * currentSpeed * Time.deltaTime, Space.World);
+
 
         //playerModelObject.transform.rotation = Quaternion.LookRotation(var);
 
@@ -198,7 +221,8 @@ public class Player : MonoBehaviour
             isRotate = false;
             return;
         }
-        
+
+
         playerModelObject.transform.rotation = Quaternion.Lerp(playerModelObject.transform.rotation, Quaternion.LookRotation(moveVector), Time.deltaTime * rotSpeed);
     }
 

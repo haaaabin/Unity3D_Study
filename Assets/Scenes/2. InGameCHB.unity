@@ -13501,9 +13501,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPool: {fileID: 1743919099}
-  playerPrefab:
-  - {fileID: 7447163605589988728, guid: 907fd825e3988774caab4234b943bf44, type: 3}
-  - {fileID: 6252356961377389083, guid: 2db03e7c8a8135146b280e5da7e0289c, type: 3}
+  playerPrefab: {fileID: 0}
   startPointObject: {fileID: 1716456331}
 --- !u!114 &7844443832370164701
 MonoBehaviour:
