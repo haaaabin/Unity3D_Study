@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
 
-    public static GameManager GetInstance()
+    public static GameManager Instance()
     {
         if (instance == null)
         {
