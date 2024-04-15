@@ -19,10 +19,10 @@ public class BackendNoticeBoard : MonoBehaviour
     [System.Serializable]
     public struct PostData
     {
-        public string nickname;
         public string title;
         public string content;
         public string inDate;
+        public string id;
     }
 
     //게시글 정보를 저장할 구조체 리스트
@@ -54,7 +54,7 @@ public class BackendNoticeBoard : MonoBehaviour
 
     public void WritePost()
     {
-        string nickname = Backend.UserNickName;
+        string id = BackendServerManager.Instance().GetId();
         string date = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         int like = 0;
         string title = input_post[TITLE_INDEX].text;
@@ -67,12 +67,11 @@ public class BackendNoticeBoard : MonoBehaviour
         }
         Param param = new Param
         {
-            { "nickname", nickname },
             { "date", date },
             { "like", like },
             { "title", title },
             { "content", content },
-            //{ "gamer_id", id },
+            { "id", id }
         };
         var bro = Backend.GameData.Insert("notice_table", param);
         if (bro.IsSuccess())
@@ -117,18 +116,17 @@ public class BackendNoticeBoard : MonoBehaviour
 
                 for (int i = 0; i < postDataJson.Count; i++)
                 {
-                    string nickname = postDataJson[i]["nickname"].ToString();
                     string title = postDataJson[i]["title"].ToString();
                     string content = postDataJson[i]["content"].ToString();
                     string inDate = postDataJson[i]["inDate"].ToString();
-                    //string date = postDataJson[i]["date"].ToString(); 
+                    string id = postDataJson[i]["id"].ToString();
 
                     // 새로운 게시글 데이터를 리스트에 추가
                     PostData postData = new PostData();
-                    postData.nickname = nickname;
                     postData.title = title;
                     postData.content = content;
                     postData.inDate = inDate;
+                    postData.id = id;
                     postDataList.Add(postData);
 
                 }
@@ -157,9 +155,12 @@ public class BackendNoticeBoard : MonoBehaviour
         {
             GameObject postObject = Instantiate(post_Prefab, post_spawnPoint);
 
-            postObject.transform.Find("Text_Info/NickName").GetComponent<TextMeshProUGUI>().text = postData.nickname;
+            //LoginUI에서 사용하는 ID를 가져와서 게시글에 표시
+            string loginId = BackendServerManager.Instance().GetId();
+
+            postObject.transform.Find("Text_Info/ID").GetComponent<TextMeshProUGUI>().text = postData.id;
             postObject.transform.Find("Text_Info/Title").GetComponent<TextMeshProUGUI>().text = postData.title;
-            postObject.transform.Find("Text_Info/Info").GetComponent<TextMeshProUGUI>().text = postData.content;
+            postObject.transform.Find("Text_Info/Content").GetComponent<TextMeshProUGUI>().text = postData.content;
 
             if (!postObjectDic.ContainsKey(postData.inDate))
             {
@@ -171,14 +172,14 @@ public class BackendNoticeBoard : MonoBehaviour
             if (button != null)
             {
                 int index = postDataList.IndexOf(postData);     //해당 게시글의 인덱스를 저장
-                button.onClick.AddListener(() => ShowPost_Panel(postData.inDate));
+                button.onClick.AddListener(() => ShowPostPanel(postData.inDate));
             }
 
             postObject.transform.Find("DeleteBtn").gameObject.SetActive(isMyPost);
             Button delete_btn = postObject.transform.Find("DeleteBtn").GetComponent<Button>();
             if (delete_btn != null)
             {
-                delete_btn.onClick.AddListener(() => deletePost(postData.inDate));
+                delete_btn.onClick.AddListener(() => DeletePost(postData.inDate));
             }
 
         }
@@ -186,7 +187,7 @@ public class BackendNoticeBoard : MonoBehaviour
     }
 
     //게시글 상세보기 
-    public void ShowPost_Panel(string inDate)
+    public void ShowPostPanel(string inDate)
     {
         //인덱스가 유효한지 확인
         if (!postObjectDic.ContainsKey(inDate))
@@ -210,7 +211,7 @@ public class BackendNoticeBoard : MonoBehaviour
             }
         }
     }
-    public void deletePost(string inDate)
+    public void DeletePost(string inDate)
     {
         // 게시글 삭제 요청 보내기
         var bro = Backend.GameData.DeleteV2("notice_table", inDate, Backend.UserInDate);

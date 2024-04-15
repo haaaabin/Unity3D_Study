@@ -10,6 +10,8 @@ using BackEnd;
 public class BackendServerManager : MonoBehaviour {
     private static BackendServerManager instance = null;
 
+    public string loginId;
+
     void Awake()
     {
         if (instance != null)
@@ -73,6 +75,7 @@ public class BackendServerManager : MonoBehaviour {
         if (bro.IsSuccess())
         {
             Debug.Log("커스텀 로그인 성공: " + bro);
+            loginId = id;
             return true;
         }
         else
@@ -96,5 +99,11 @@ public class BackendServerManager : MonoBehaviour {
             Debug.LogError("닉네임 변경 실패: " + bro);
             return false;
         }
+    }
+    
+    //유저 정보 가져오기
+    public string GetId()
+    {
+        return loginId;
     }
 }
