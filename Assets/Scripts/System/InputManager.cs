@@ -5,12 +5,10 @@ public class InputManager : MonoBehaviour
 {
     public VariableJoystick joystick;
 
-
     void Start()
     {
         GameManager.InGame += MobileInput;        
     }
-
 
     void MobileInput()
     {
@@ -31,17 +29,13 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        KeyMessage msg;
-        msg = new KeyMessage(keyCode, moveVector);
+        KeyMessage msg = new KeyMessage(keyCode, moveVector);
         if (BackendMatchManager.Instance().IsHost())
         {
-            Debug.Log("Test: AddMsgToLocalQueue");
             BackendMatchManager.Instance().AddMsgToLocalQueue(msg);
-            
         }
         else
         {
-            Debug.Log("Test: SendDataToInGame");
             BackendMatchManager.Instance().SendDataToInGame<KeyMessage>(msg);
         }
     }

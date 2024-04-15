@@ -326,7 +326,6 @@ public partial class BackendMatchManager : MonoBehaviour
         {
             var nickName = Backend.Match.GetNickNameBySessionId(args.GameRecord.m_sessionId);
             Debug.Log(string.Format("[{0}] 온라인되었습니다. - {1} : {2}", nickName, args.ErrInfo, args.Reason));
-            ProcessSessionOnline(args.GameRecord.m_sessionId, nickName);
         };
 
         // 다른 유저 혹은 자기자신이 접속이 끊어졌을 때 모든 클라이언트에게 호출

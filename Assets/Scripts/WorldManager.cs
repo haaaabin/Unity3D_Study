@@ -2,7 +2,6 @@ using BackEnd.Tcp;
 using Protocol;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements.Experimental;
 
 public class WorldManager : MonoBehaviour
 {
@@ -60,7 +59,6 @@ public class WorldManager : MonoBehaviour
         }
 
         players = new Dictionary<SessionId, Player>();
-        // BackendMatchManager.Instance().SetPlayerSessionList(gamers);
 
         int index = 0;
         foreach (var sessionId in gamers)
