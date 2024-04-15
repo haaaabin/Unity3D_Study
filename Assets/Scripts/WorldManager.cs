@@ -2,6 +2,7 @@ using BackEnd.Tcp;
 using Protocol;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements.Experimental;
 
 public class WorldManager : MonoBehaviour
 {
@@ -26,7 +27,6 @@ public class WorldManager : MonoBehaviour
     void Start()
     {
         InitializeGame();
-        GameManager.Instance().ChangeState(GameManager.GameState.InGame);
     }
     public bool InitializeGame()
     {
@@ -81,6 +81,12 @@ public class WorldManager : MonoBehaviour
             index += 1;
         }
         Debug.Log("Num Of Current Player : " + size);
+        if (BackendMatchManager.Instance().IsHost())
+        {
+            // 게임 시작 메시지를 전송
+            GameStartMessage gameStartMessage = new GameStartMessage();
+            BackendMatchManager.Instance().SendDataToInGame<GameStartMessage>(gameStartMessage);
+        }
 
     }
     public void OnRecieve(MatchRelayEventArgs args)
@@ -107,6 +113,9 @@ public class WorldManager : MonoBehaviour
         }
         switch (msg.type)
         {
+            case Protocol.Type.GameStart:
+                GameManager.Instance().ChangeState(GameManager.GameState.InGame);
+                break;
             case Protocol.Type.Key:
                 KeyMessage keyMessage = DataParser.ReadJsonData<KeyMessage>(args.BinaryUserData);
                 ProcessKeyEvent(args.From.SessionId, keyMessage);

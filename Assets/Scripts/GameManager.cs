@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour
     }
     private void GameStart()
     {
+        Debug.Log("인게임 씬 전환 메시지 수신");
         //delegate 초기화
         InGame = delegate { };
         SceneManager.LoadScene("2. InGameJJM");
@@ -86,5 +87,9 @@ public class GameManager : MonoBehaviour
                 Debug.Log("알수없는 스테이트입니다. 확인해주세요.");
                 break;
         }
+    }
+    public GameState GetGameState()
+    {
+        return gameState;
     }
 }

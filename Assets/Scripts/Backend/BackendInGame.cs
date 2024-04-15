@@ -28,16 +28,26 @@ public partial class BackendMatchManager : MonoBehaviour
             isSetHost = SetHostSession();
         }
         Debug.Log("호스트 설정 완료");
+
+        if (IsHost() == true)
+        {
+            Debug.Log("3초 후 인게임 씬 전환 메시지 송신");
+            Invoke("SendChangeGameScene", 3f);
+        }
     }
+
     // 서버에서 게임 시작 패킷을 보냈을 때 호출
     // 모든 세션이 게임 룸에 참여 후 "콘솔에서 설정한 시간" 후에 게임 시작 패킷이 서버에서 온다
     private void GameSetup()
     {
         Debug.Log("게임 시작 메시지 수신. 게임 설정 시작");
         // 게임 시작 메시지가 오면 게임을 레디 상태로 변경
-        isHost = false;
-        isSetHost = false;
-        OnGameReady();
+        if (GameManager.Instance().GetGameState() != GameManager.GameState.Ready)
+        {
+            isHost = false;
+            isSetHost = false;
+            OnGameReady();
+        }
     }
 
     // 현재 룸에 접속한 세션들의 정보
@@ -137,5 +147,27 @@ public partial class BackendMatchManager : MonoBehaviour
         // 현재 게임 상황 (위치, hp 등등...)
         var message = WorldManager.instance.GetNowGameState(hostSession);
         SendDataToInGame(message);
+    }
+    private void SendChangeGameScene()
+    {
+        Debug.Log("인게임 씬 전환 메시지 송신");
+        SendDataToInGame(new Protocol.LoadGameSceneMessage());
+    }
+    public bool PrevGameMessage(byte[] BinaryUserData)
+    {
+        Protocol.Message msg = DataParser.ReadJsonData<Protocol.Message>(BinaryUserData);
+        if (msg == null)
+        {
+            return false;
+        }
+
+        // 게임 설정 사전 작업 패킷 검사 
+        switch (msg.type)
+        {
+            case Protocol.Type.LoadGameScene:
+                GameManager.Instance().ChangeState(GameManager.GameState.Start);
+                return true;
+        }
+        return false;
     }
 }
