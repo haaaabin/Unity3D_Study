@@ -960,6 +960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4503b4e2ecc3e544ea67688b788f6950, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerType: 0
   isMe: 0
   nameObject: {fileID: 8102500750073286511, guid: a542a3e2552e5ab449bef7794e54bb27,
     type: 3}
