@@ -107,7 +107,7 @@ public partial class BackendMatchManager : MonoBehaviour
     // 인게임 룸 접속
     private void AccessInGameRoom(string roomToken)
     {
-        SelectUI.Instance().SetProgressText("게임 방 접속 중");
+        LoginUI.Instance().SetProgressText("게임 방 접속 중");
 
         Backend.Match.JoinGameRoom(roomToken);
     }
@@ -118,11 +118,6 @@ public partial class BackendMatchManager : MonoBehaviour
         Backend.Match.LeaveGameServer();
     }
 
-    // 호스트에서 보낸 세션리스트로 갱신
-    public void SetPlayerSessionList(List<SessionId> sessions)
-    {
-        sessionIdList = sessions;
-    }
     // 서버로 데이터 패킷 전송
     // 서버에서는 이 패킷을 받아 모든 클라이언트(패킷 보낸 클라이언트 포함)로 브로드캐스팅 해준다.
     public void SendDataToInGame<T>(T msg)
@@ -130,24 +125,7 @@ public partial class BackendMatchManager : MonoBehaviour
         var byteArray = DataParser.DataToJsonData<T>(msg);
         Backend.Match.SendDataToInGameRoom(byteArray);
     }
-        private void ProcessSessionOnline(SessionId sessionId, string nickName)
-    {
-        // 호스트가 아니면 아무 작업 안함 (호스트가 해줌)
-        if (isHost)
-        {
-            // 재접속 한 클라이언트가 인게임 씬에 접속하기 전 게임 정보값을 전송 시 nullptr 예외가 발생하므로 조금
-            // 2초정도 기다린 후 게임 정보 메시지를 보냄
-            Invoke("SendGameSyncMessage", 2.0f);
-        }
-    }
 
-    // Invoke로 실행됨
-    private void SendGameSyncMessage()
-    {
-        // 현재 게임 상황 (위치, hp 등등...)
-        var message = WorldManager.instance.GetNowGameState(hostSession);
-        SendDataToInGame(message);
-    }
     private void SendChangeGameScene()
     {
         Debug.Log("인게임 씬 전환 메시지 송신");
