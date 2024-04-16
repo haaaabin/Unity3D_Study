@@ -54,7 +54,7 @@ public partial class BackendMatchManager : MonoBehaviour
     // 매칭 대기방 생성 및 입장
     public bool CreateMatchRoom()
     {
-        SelectUI.Instance().SetProgressText("매칭 대기방 생성 중");
+        LoginUI.Instance().SetProgressText("매칭 대기방 생성 중");
 
         if (!isConnectMatchServer)
         {
@@ -76,7 +76,7 @@ public partial class BackendMatchManager : MonoBehaviour
     // 매칭 신청하기
     public void RequestMatchMaking(int index)
     {
-        SelectUI.Instance().SetProgressText("매칭 신청중");
+        LoginUI.Instance().SetProgressText("매칭 신청중");
 
         // 매청 서버에 연결되어 있지 않으면 매칭 서버 접속
         if (!isConnectMatchServer)
@@ -141,7 +141,7 @@ public partial class BackendMatchManager : MonoBehaviour
         {
             case ErrorCode.Success:
                 // 매칭 성공했을 때
-                SelectUI.Instance().SetProgressText("인게임 서버 접속 중");
+                LoginUI.Instance().SetProgressText("인게임 서버 접속 중");
                 debugLog = string.Format(SUCCESS_MATCHMAKE, args.Reason);
                 ProcessMatchSuccess(args);
                 break;
@@ -152,7 +152,7 @@ public partial class BackendMatchManager : MonoBehaviour
                 // 매칭 신청 성공했을 때
                 if (args.Reason == string.Empty)
                 {
-                    SelectUI.Instance().SetProgressText(SUCCESS_REGIST_MATCHMAKE);
+                    LoginUI.Instance().SetProgressText(SUCCESS_REGIST_MATCHMAKE);
                     debugLog = SUCCESS_REGIST_MATCHMAKE;
                 }
                 break;

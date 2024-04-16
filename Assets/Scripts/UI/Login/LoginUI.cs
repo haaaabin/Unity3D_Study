@@ -11,6 +11,12 @@ using UnityEngine.SceneManagement;
 public class LoginUI : MonoBehaviour
 {
     private static LoginUI instance;
+    public GameObject input_id, input_pw, input_nickname;
+    public GameObject btns_login, btns_signup, btn_play;
+    public GameObject object_popup, object_progress, object_loading;
+    private TMP_Text text_popup, text_progress;
+    private TMP_InputField[] inputs = new TMP_InputField[3];
+    private const int ID_INDEX = 0, PW_INDEX = 1, NICKNAME_INDEX = 2;
     void Awake()
     {
         instance = this;
@@ -27,31 +33,71 @@ public class LoginUI : MonoBehaviour
     }
     void Start()
     {
-        login_object.SetActive(true);
-        signup_object.SetActive(false);
+        input_id.SetActive(true);
+        input_pw.SetActive(true);
+        input_nickname.SetActive(false);
+        btns_login.SetActive(true);
+        btns_signup.SetActive(false);
+        btn_play.SetActive(false);
+        object_popup.SetActive(false);
+        object_loading.SetActive(false);
+        object_progress.SetActive(false);
+
+        inputs[ID_INDEX] = input_id.GetComponent<TMP_InputField>();
+        inputs[PW_INDEX] = input_pw.GetComponent<TMP_InputField>();
+        inputs[NICKNAME_INDEX] = input_nickname.GetComponent<TMP_InputField>();
+        text_progress = object_progress.GetComponent<TMP_Text>();
+        text_popup = object_popup.GetComponentsInChildren<TMP_Text>()[0];
     }
-    public GameObject login_object, signup_object, popup_object;
-    public TMP_InputField[] inputs;
-    public TMP_Text popup_text;
-    private const byte ID_INDEX = 0, PW_INDEX = 1;
-    void CleanIDPW()
+    void CleanInputField()
     {
-        inputs[ID_INDEX].text = "";
-        inputs[PW_INDEX].text = "";
+        for (int i = 0; i < inputs.Length; i++)
+        {
+            inputs[i].text = "";
+        }
     }
-    public void ClickLogin()
+    public void Play()
+    {
+        if (inputs[NICKNAME_INDEX].text.Length < 2)
+        {
+            ShowPopUp("닉네임은 2글자 이상이어야 합니다.");
+            return;
+        }
+        if (BackendServerManager.Instance().UpdateNickname(inputs[NICKNAME_INDEX].text))
+        {
+            PlayerInfo.Instance.Nickname = inputs[NICKNAME_INDEX].text;
+            BackendMatchManager.Instance().CreateMatchRoom();
+            input_nickname.SetActive(false);
+            btn_play.SetActive(false);
+            object_loading.SetActive(true);
+            object_progress.SetActive(true);
+        }
+        else
+        {
+            CleanInputField();
+            ShowPopUp("닉네임 설정 실패");
+        }
+    }
+    public void Login()
     { 
         bool isSuccess = BackendServerManager.Instance().CustomLogin(inputs[ID_INDEX].text, inputs[PW_INDEX].text);
         if (isSuccess)
         {
-            SceneManager.LoadScene("1. Select");
+            ShowPopUp("로그인 성공");
+            input_id.SetActive(false);
+            input_pw.SetActive(false);
+            btns_login.SetActive(false);
+            input_nickname.SetActive(true);
+            btn_play.SetActive(true);
+            BackendMatchManager.Instance().GetMatchList();
+            BackendMatchManager.Instance().Invoke("JoinMatchMakingServer", 1.0f);
         }
         else
         {
             ShowPopUp("로그인 실패");
         }
     }
-    public void ClickSignUp()
+    public void SignUp()
     {
         bool isSuccess = BackendServerManager.Instance().CustomSignUp(inputs[ID_INDEX].text, inputs[PW_INDEX].text);
         if (isSuccess)
@@ -66,18 +112,17 @@ public class LoginUI : MonoBehaviour
     }
     public void ToggleLoginSignin()
     {
-        CleanIDPW();
-        login_object.SetActive(!login_object.activeSelf);
-        signup_object.SetActive(!signup_object.activeSelf);
+        CleanInputField();
+        btns_login.SetActive(!btns_login.activeSelf);
+        btns_signup.SetActive(!btns_signup.activeSelf);
     }
     public void ShowPopUp(string text)
     {
-        popup_object.SetActive(true);
-        popup_text.text = text;
+        object_popup.SetActive(true);
+        text_popup.text = text;
     }
-    public void ClosePopUp()
+    public void SetProgressText(string text)
     {
-        popup_text.text = "";
-        popup_object.SetActive(false);
+        text_progress.text = text;
     }
 }
