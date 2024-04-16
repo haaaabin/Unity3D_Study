@@ -107,7 +107,7 @@ public partial class BackendMatchManager : MonoBehaviour
     // 인게임 룸 접속
     private void AccessInGameRoom(string roomToken)
     {
-        SelectUI.Instance().SetProgressText("게임 방 접속 중");
+        LoginUI.Instance().SetProgressText("게임 방 접속 중");
 
         Backend.Match.JoinGameRoom(roomToken);
     }

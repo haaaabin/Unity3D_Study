@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("인게임 씬 전환 메시지 수신");
         //delegate 초기화
         InGame = delegate { };
-        SceneManager.LoadScene("2. InGameJJM");
+        SceneManager.LoadScene("1. InGameJJM");
     }
     public void ChangeState(GameState state, Action<bool> func = null)
     {
