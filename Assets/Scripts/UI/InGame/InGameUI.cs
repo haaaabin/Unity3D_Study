@@ -8,9 +8,11 @@ public class InGameUI : MonoBehaviour
 
     public GameObject popup_btn_noticeboard, panel_noticeboard;
     public GameObject panel_write, panel_openPost;
+    public GameObject object_popup;
 
     public Button btn_write, btn_allPost, btn_myPost, btn_close;
 
+    private TMP_Text text_popup;
     public TMP_InputField[] input_post;
     private const byte TITLE_INDEX = 0, CONTENT_INDEX = 1;
 
@@ -35,6 +37,8 @@ public class InGameUI : MonoBehaviour
         panel_noticeboard.SetActive(false);
         panel_write.SetActive(false);
         panel_openPost.SetActive(false);
+        object_popup.SetActive(false);
+        text_popup = object_popup.GetComponentsInChildren<TMP_Text>()[0];  
     }
 
     // 버튼 사용 가능 여부 설정
@@ -82,7 +86,6 @@ public class InGameUI : MonoBehaviour
     public void Write()
     {
         BackendNoticeBoard.Instance().WritePost();
-        TogglePanelWrite();
     }
 
     // 모든 게시글 불러오기
@@ -97,5 +100,10 @@ public class InGameUI : MonoBehaviour
     {
         BackendNoticeBoard.Instance().isMyPost = true;
         BackendNoticeBoard.Instance().GetPost();
+    }
+    public void ShowPopUp(string text)
+    {
+        object_popup.SetActive(true);
+        text_popup.text = text;
     }
 }

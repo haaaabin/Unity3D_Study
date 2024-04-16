@@ -13,7 +13,6 @@ public class BackendNoticeBoard : MonoBehaviour
     public GameObject post_Prefab;
     public Transform post_spawnPoint;
     public GameObject post_Content;
-
     public bool isMyPost = false;
 
     [System.Serializable]
@@ -63,6 +62,7 @@ public class BackendNoticeBoard : MonoBehaviour
         if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(content))
         {
             Debug.LogError("제목 또는 내용이 비어있습니다.");
+            InGameUI.Instance().ShowPopUp("제목 또는 내용이 비어있습니다.");
             return;
         }
         Param param = new Param
@@ -83,6 +83,8 @@ public class BackendNoticeBoard : MonoBehaviour
         {
             Debug.LogError("게시글 작성 실패");
         }
+
+        InGameUI.Instance().TogglePanelWrite();
     }
 
 
@@ -109,6 +111,7 @@ public class BackendNoticeBoard : MonoBehaviour
             if (postDataJson.Count <= 0)
             {
                 Debug.LogWarning("데이터가 존재하지 않습니다.");
+                InGameUI.Instance().ShowPopUp("작성한 게시글이 없습니다.");
             }
             else
             {
