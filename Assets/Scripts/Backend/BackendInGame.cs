@@ -1,6 +1,5 @@
 using BackEnd;
 using BackEnd.Tcp;
-using Protocol;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,7 +12,6 @@ using UnityEngine;
 public partial class BackendMatchManager : MonoBehaviour
 {
     private bool isSetHost = false;                 // 호스트 세션 결정했는지 여부
-    // public Dictionary<SessionId, PlayerType> playerTypeList; // 세션별 플레이어 타입
 
     // 게임 로그
     private string FAIL_ACCESS_INGAME = "인게임 접속 실패 : {0} - {1}";

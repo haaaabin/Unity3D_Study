@@ -23,7 +23,6 @@ namespace Protocol
         GameStart,      // 게임 시작
         GameEnd,        // 게임 종료
         GameSync,       // 플레이어 재접속 시 게임 현재 상황 싱크
-        PlayerType,     // 플레이어 타입
         Max
     }
     // 조이스틱 키 이벤트 코드
