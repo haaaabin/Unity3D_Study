@@ -1,7 +1,5 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 /* LoginUI.cs
  * 로그인 UI 관리
@@ -65,7 +63,6 @@ public class LoginUI : MonoBehaviour
         }
         if (BackendServerManager.Instance().UpdateNickname(inputs[NICKNAME_INDEX].text))
         {
-            PlayerInfo.Instance.Nickname = inputs[NICKNAME_INDEX].text;
             BackendMatchManager.Instance().CreateMatchRoom();
             input_nickname.SetActive(false);
             btn_play.SetActive(false);
