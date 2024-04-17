@@ -27,6 +27,7 @@ public class BackendNoticeBoard : MonoBehaviour
     //게시글 정보를 저장할 구조체 리스트
     public List<PostData> postDataList = new List<PostData>();
     
+    //게시글 정보를 저장할 딕셔너리
     public Dictionary<string, GameObject> postObjectDic = new Dictionary<string, GameObject>();
 
     private static BackendNoticeBoard instance;
@@ -115,6 +116,7 @@ public class BackendNoticeBoard : MonoBehaviour
             }
             else
             {
+                // 기존의 게시글 데이터를 모두 삭제
                 postDataList.Clear();
 
                 for (int i = 0; i < postDataJson.Count; i++)
@@ -124,7 +126,7 @@ public class BackendNoticeBoard : MonoBehaviour
                     string inDate = postDataJson[i]["inDate"].ToString();
                     string id = postDataJson[i]["id"].ToString();
 
-                    // 새로운 게시글 데이터를 리스트에 추가
+                    // 게시글 데이터를 저장할 구조체를 생성하여 리스트에 추가
                     PostData postData = new PostData();
                     postData.title = title;
                     postData.content = content;
@@ -165,6 +167,7 @@ public class BackendNoticeBoard : MonoBehaviour
             postObject.transform.Find("Text_Info/Title").GetComponent<TextMeshProUGUI>().text = postData.title;
             postObject.transform.Find("Text_Info/Content").GetComponent<TextMeshProUGUI>().text = postData.content;
 
+            // 중복 키 방지
             if (!postObjectDic.ContainsKey(postData.inDate))
             {
                 //딕셔너리에 게시글 데이터와 게시글 UI 요소를 추가
